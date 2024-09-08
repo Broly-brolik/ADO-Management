@@ -29,8 +29,10 @@ import com.example.aguadeoromanagement.models.Invoice
 import com.example.aguadeoromanagement.models.InvoiceItem
 import com.example.aguadeoromanagement.models.Payment
 import com.example.aguadeoromanagement.models.StockHistory
+import com.example.aguadeoromanagement.networking.api.getStockForSimilarOrders
 import com.example.aguadeoromanagement.ui.theme.MainGreen
 import com.example.aguadeoromanagement.utils.toPrice
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import java.time.LocalDate
 import java.time.Period
@@ -543,6 +545,7 @@ fun InOutContainerV2(inOutList: List<StockHistory>, loadingItems: Boolean, modif
                     )
                 )
             }
+            val scope = rememberCoroutineScope()
 
             LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 orderStock.keys.forEach { key ->
@@ -552,7 +555,14 @@ fun InOutContainerV2(inOutList: List<StockHistory>, loadingItems: Boolean, modif
                         Column {
 
 
-                            Text(key, fontWeight = FontWeight.Bold)
+                            Text(
+                                text = key,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.clickable {
+                                    scope.launch {
+                                        getStockForSimilarOrders(key)
+                                    }
+                                })
                             Column() {
                                 Row(
                                     modifier = Modifier

@@ -38,3 +38,13 @@ suspend fun getStockHistoryForInvoice(invoiceID: Int): List<StockHistory> {
         return@withContext res
     }
 }
+
+suspend fun getStockForSimilarOrders(order:String){
+    return withContext(Dispatchers.IO){
+        val split = order.split("_")
+        val prefix = split[0]+"_"+split[1]
+        val query = Query("select OrderNumber FROM StockHistory1 WHERE OrderNumber LIKE '%$prefix%'")
+        val s = query.execute(Constants.url)
+        Log.e("similar orders", query.res.map { it["OrderNumber"] }.distinct().toString()  )
+    }
+}
