@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.aguadeoromanagement.MainActivity">
+
+    <item
+        android:id="@+id/action_add_payment"
+        android:orderInCategory="100"
+        android:title="Add Payment"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_add_invoice_history"
+        android:orderInCategory="100"
+        android:title="Add History"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_home"
+        android:orderInCategory="100"
+        android:title="Home"
+        app:showAsAction="never" />
+
+
+</menu>

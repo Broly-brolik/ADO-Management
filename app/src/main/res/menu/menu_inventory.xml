@@ -1,0 +1,54 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.aguadeoromanagement.MainActivity">
+    <item
+        android:id="@+id/action_connect_reader"
+        android:orderInCategory="100"
+        android:title="Connect reader"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_save_location"
+        android:orderInCategory="100"
+        android:title="Save location"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_start_check_inventory"
+        android:orderInCategory="100"
+        android:title="Start check"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_continue_check_inventory"
+        android:orderInCategory="100"
+        android:title="Continue check"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_finish_check"
+        android:orderInCategory="100"
+        android:title="Finish check"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_show_location_summary"
+        android:orderInCategory="100"
+        android:title="Location Summary"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_init_location"
+        android:orderInCategory="100"
+        android:title="Start Scan"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_update_location"
+        android:orderInCategory="100"
+        android:title="Update location"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_start_transfer"
+        android:orderInCategory="100"
+        android:title="Start Transfer"
+        app:showAsAction="never" />
+
+
+</menu>

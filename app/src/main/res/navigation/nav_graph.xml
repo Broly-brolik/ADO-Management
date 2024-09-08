@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/HomeFragment">
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.example.aguadeoromanagement.fragments.Home"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_FirstFragment_to_ordersManagement"
+            app:destination="@id/ordersManagement" />
+        <action
+            android:id="@+id/action_FirstFragment_to_reportsHome"
+            app:destination="@id/reportsHome" />
+        <action
+            android:id="@+id/action_FirstFragment_to_suppliersList"
+            app:destination="@id/suppliersList" />
+        <action
+            android:id="@+id/action_FirstFragment_to_paymentsList"
+            app:destination="@id/paymentsList" />
+        <action
+            android:id="@+id/action_FirstFragment_to_inventory"
+            app:destination="@id/inventory" />
+        <action
+            android:id="@+id/action_FirstFragment_to_productsFragment"
+            app:destination="@id/productsFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_singleInventory"
+            app:destination="@id/singleInventory" />
+        <action
+            android:id="@+id/action_HomeFragment_to_statisticsFragment"
+            app:destination="@id/statisticsFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_invoiceList"
+            app:destination="@id/invoiceList" />
+        <action
+            android:id="@+id/action_HomeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ordersManagement"
+        android:name="com.example.aguadeoromanagement.fragments.OrdersManagement"
+        android:label="Orders Management" />
+    <fragment
+        android:id="@+id/reportsHome"
+        android:name="com.example.aguadeoromanagement.fragments.ReportsHome"
+        android:label="Reports">
+        <action
+            android:id="@+id/action_reportsHome_to_cashReportFragment"
+            app:destination="@id/cashReportFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cashReportFragment"
+        android:name="com.example.aguadeoromanagement.fragments.CashReportFragment"
+        android:label="Cash report" />
+    <fragment
+        android:id="@+id/suppliersManagement"
+        android:name="com.example.aguadeoromanagement.fragments.SuppliersManagement"
+        android:label="Supplier"
+        tools:layout="@layout/fragment_suppliers_management">
+        <argument
+            android:name="contact_id"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_suppliersManagement_to_createInvoice"
+            app:destination="@id/createInvoice" />
+        <action
+            android:id="@+id/action_suppliersManagement_to_invoiceDetails"
+            app:destination="@id/invoiceDetails" />
+        <action
+            android:id="@+id/action_suppliersManagement_to_allInvoices"
+            app:destination="@id/allInvoices" />
+        <argument
+            android:name="contact_name"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_suppliersManagement_to_invoiceDetailsV2"
+            app:destination="@id/invoiceDetailsV2" />
+    </fragment>
+    <fragment
+        android:id="@+id/suppliersList"
+        android:name="com.example.aguadeoromanagement.fragments.SuppliersList"
+        android:label="Suppliers">
+        <action
+            android:id="@+id/action_suppliersList_to_suppliersManagement"
+            app:destination="@id/suppliersManagement" />
+        <action
+            android:id="@+id/action_suppliersList_to_createContact"
+            app:destination="@id/createContact" />
+        <action
+            android:id="@+id/action_suppliersList_to_createInvoice"
+            app:destination="@id/createInvoice" />
+    </fragment>
+    <fragment
+        android:id="@+id/createInvoice"
+        android:name="com.example.aguadeoromanagement.fragments.CreateInvoice">
+        <argument
+            android:name="SupplierOrderMain"
+            app:argType="com.example.aguadeoromanagement.models.SupplierOrderMain[]" />
+        <argument
+            android:name="Supplier"
+            app:argType="com.example.aguadeoromanagement.models.Contact" />
+        <action
+            android:id="@+id/action_createInvoice_to_invoiceDetails"
+            app:destination="@id/invoiceDetails" >
+            <argument
+                android:name="from_create_invoice"
+                android:defaultValue="true" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/createContact"
+        android:name="com.example.aguadeoromanagement.fragments.CreateContact"
+        android:label="CreateContact" />
+    <fragment
+        android:id="@+id/invoiceDetails"
+        android:name="com.example.aguadeoromanagement.fragments.InvoiceDetails"
+        android:label="Invoice details"
+        tools:layout="@layout/fragment_invoice_details">
+        <argument
+            android:name="Invoice"
+            app:argType="com.example.aguadeoromanagement.models.Invoice" />
+        <action
+            android:id="@+id/action_invoiceDetails_to_FirstFragment"
+            app:destination="@id/HomeFragment" />
+        <argument
+            android:name="contactName"
+            app:argType="string" />
+        <argument
+            android:name="stockHistory"
+            app:argType="com.example.aguadeoromanagement.models.StockHistory[]" />
+        <action
+            android:id="@+id/action_invoiceDetails_to_suppliersManagement"
+            app:destination="@id/suppliersManagement" />
+        <argument
+            android:name="from_create_invoice"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentsList"
+        android:name="com.example.aguadeoromanagement.fragments.PaymentsList"
+        android:label="PaymentsList" >
+        <action
+            android:id="@+id/action_paymentsList_to_invoiceDetails"
+            app:destination="@id/invoiceDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/allInvoices"
+        android:name="com.example.aguadeoromanagement.fragments.AllInvoices"
+        tools:layout="@layout/fragment_all_invoices">
+        <argument
+            android:name="contact"
+            app:argType="com.example.aguadeoromanagement.models.Contact" />
+        <action
+            android:id="@+id/action_allInvoices_to_invoiceDetails"
+            app:destination="@id/invoiceDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/inventory"
+        android:name="com.example.aguadeoromanagement.fragments.InventoryFragment"
+        android:label="Inventory" >
+        <action
+            android:id="@+id/action_inventory_to_singleInventory"
+            app:destination="@id/singleInventory" />
+    </fragment>
+    <fragment
+        android:id="@+id/productsFragment"
+        android:name="com.example.aguadeoromanagement.fragments.ProductsFragment"
+        android:label="Products" />
+    <fragment
+        android:id="@+id/singleInventory"
+        android:name="com.example.aguadeoromanagement.fragments.ProductDetailsFragment"
+        android:label="Inventory details" >
+        <argument
+            android:name="inventoryCode"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="com.example.aguadeoromanagement.fragments.StatisticsFragment"
+        android:label="StatisticsFragment" />
+    <fragment
+        android:id="@+id/invoiceList"
+        android:name="com.example.aguadeoromanagement.fragments.InvoiceListFragment"
+        android:label="InvoiceList" >
+        <action
+            android:id="@+id/action_invoiceList_to_invoiceDetails"
+            app:destination="@id/invoiceDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/invoiceDetailsV2"
+        android:name="com.example.aguadeoromanagement.fragments.InvoiceDetailsV2"
+        android:label="InvoiceDetailsV2" >
+        <argument
+            android:name="invoice"
+            app:argType="com.example.aguadeoromanagement.models.Invoice" />
+        <argument
+            android:name="contactName"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.aguadeoromanagement.fragments.SettingsFragment"
+        android:label="Settings" />
+</navigation>

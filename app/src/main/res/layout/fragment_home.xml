@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".fragments.Home">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/orderManagementButton"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="64dp"
+            android:text="Orders Management"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/ReportsHome"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ReportsHome"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:text="Reports"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/orderManagementButton"
+            app:layout_constraintTop_toTopOf="@+id/orderManagementButton" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/suppliersBtn"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="64dp"
+            android:text="Suppliers"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/orderManagementButton"
+            app:layout_constraintStart_toStartOf="@+id/orderManagementButton"
+            app:layout_constraintTop_toBottomOf="@+id/orderManagementButton" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/paymentsBtn"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="64dp"
+            android:text="Payments"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/ReportsHome"
+            app:layout_constraintStart_toStartOf="@+id/ReportsHome"
+            app:layout_constraintTop_toBottomOf="@+id/orderManagementButton"
+            app:rippleColor="@color/colorPrimary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/inventoryBtn"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="64dp"
+            android:text="Inventory"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintStart_toStartOf="@+id/suppliersBtn"
+            app:layout_constraintTop_toBottomOf="@+id/suppliersBtn"
+            app:rippleColor="@color/colorPrimary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/productBtn"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:text="Products"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/paymentsBtn"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/paymentsBtn"
+            app:layout_constraintTop_toTopOf="@+id/inventoryBtn"
+            app:rippleColor="@color/colorPrimary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/statisticsBtn"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:drawableTop="@drawable/bar_chart"
+            android:drawableTint="@color/white"
+            android:text="Statistics"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/bar_chart"
+            app:iconGravity="start"
+            app:iconPadding="32dp"
+            app:iconSize="64dp"
+            app:layout_constraintBottom_toBottomOf="@+id/singleProductBtn"
+            app:layout_constraintEnd_toEndOf="@+id/productBtn"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/productBtn"
+            app:layout_constraintTop_toTopOf="@+id/singleProductBtn"
+            app:rippleColor="@color/colorPrimary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/singleProductBtn"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="64dp"
+            android:drawableTop="@drawable/single_product_icon"
+            android:drawableTint="@color/white"
+            android:text="Single Product"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/single_product_icon"
+            app:iconGravity="start"
+            app:iconPadding="32dp"
+            app:iconSize="64dp"
+            app:layout_constraintEnd_toEndOf="@+id/inventoryBtn"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/inventoryBtn"
+            app:layout_constraintTop_toBottomOf="@+id/inventoryBtn"
+            app:rippleColor="@color/colorPrimary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/invoiceListBtn"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="64dp"
+            android:drawableTint="@color/white"
+            android:text="Invoices"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            app:iconGravity="start"
+            app:iconPadding="32dp"
+            app:iconSize="64dp"
+            app:layout_constraintEnd_toEndOf="@+id/inventoryBtn"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/inventoryBtn"
+            app:layout_constraintTop_toBottomOf="@+id/singleProductBtn"
+            app:rippleColor="@color/colorPrimary" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
