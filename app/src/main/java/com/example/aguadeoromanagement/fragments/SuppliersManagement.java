@@ -29,6 +29,7 @@ import com.example.aguadeoromanagement.adapters.suppliersFragment.SupplierHistor
 import com.example.aguadeoromanagement.adapters.suppliersFragment.SupplierOrdersHistoryAdapter;
 import com.example.aguadeoromanagement.adapters.suppliersFragment.SuppliersInvoicesHistory;
 import com.example.aguadeoromanagement.databinding.FragmentSuppliersManagementBinding;
+import com.example.aguadeoromanagement.enums.OrderGroupBy;
 import com.example.aguadeoromanagement.models.Contact;
 import com.example.aguadeoromanagement.models.ContactHistory;
 import com.example.aguadeoromanagement.models.Invoice;
@@ -91,6 +92,10 @@ public class SuppliersManagement extends Fragment {
         }
         else if (item.getItemId() == R.id.action_all_invoices){
             Navigation.findNavController(getView()).navigate(R.id.action_suppliersManagement_to_allInvoices);
+        }
+        else if (item.getItemId() ==R.id.action_in_out){
+            SuppliersManagementDirections.ActionSuppliersManagementToStockHistoryFragment action = SuppliersManagementDirections.actionSuppliersManagementToStockHistoryFragment(null, OrderGroupBy.supplier.name(), contact_name);
+            Navigation.findNavController(getView()).navigate(action);
         }
 //        switch (item.getItemId()) {
 //            case R.id.action_new_invoice:

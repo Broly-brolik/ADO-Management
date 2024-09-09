@@ -1,7 +1,7 @@
 package com.example.aguadeoromanagement.screens
 
 import android.app.DatePickerDialog
-import android.util.Log
+import android.os.Bundle
 import android.widget.DatePicker
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -22,22 +22,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.Navigation.findNavController
 import com.example.aguadeoromanagement.Constants
 import com.example.aguadeoromanagement.ManagementApplication
+import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.components.Spinner
+import com.example.aguadeoromanagement.enums.OrderGroupBy
+import com.example.aguadeoromanagement.fragments.InvoiceListFragmentDirections
+import com.example.aguadeoromanagement.fragments.SuppliersManagementDirections
 import com.example.aguadeoromanagement.models.Invoice
 import com.example.aguadeoromanagement.models.InvoiceItem
 import com.example.aguadeoromanagement.models.Payment
 import com.example.aguadeoromanagement.models.StockHistory
-import com.example.aguadeoromanagement.networking.api.getStockForSimilarOrders
 import com.example.aguadeoromanagement.ui.theme.MainGreen
 import com.example.aguadeoromanagement.utils.toPrice
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 
 enum class Details { NONE, ITEMS, IN_OUT, PAYMENTS }
 
@@ -59,7 +61,8 @@ fun InvoiceListScreen(
     validateInvoices: (List<Invoice>) -> Unit,
     daysBeforeNow: Int,
     updateDate: (Int, LocalDate) -> Unit,
-    selectedDate: LocalDate
+    selectedDate: LocalDate,
+    navController: NavController
 
 ) {
 
@@ -235,7 +238,8 @@ fun InvoiceListScreen(
                 InOutContainerV2(
                     inOutList = inOutList,
                     loadingItems = loadingItems,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    navController
                 )
             }
         }
@@ -512,7 +516,12 @@ fun StockForFlow(
 
 
 @Composable
-fun InOutContainerV2(inOutList: List<StockHistory>, loadingItems: Boolean, modifier: Modifier) {
+fun InOutContainerV2(
+    inOutList: List<StockHistory>,
+    loadingItems: Boolean,
+    modifier: Modifier,
+    navController: NavController
+) {
     Box(contentAlignment = Alignment.Center, modifier = modifier) {
         if (loadingItems) {
             CircularProgressIndicator()
@@ -559,9 +568,28 @@ fun InOutContainerV2(inOutList: List<StockHistory>, loadingItems: Boolean, modif
                                 text = key,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.clickable {
-                                    scope.launch {
-                                        getStockForSimilarOrders(key)
-                                    }
+
+
+                                    val args = Bundle()
+                                    args.putString("order_number", key)
+                                    args.putString(
+                                        "grouping",
+                                        OrderGroupBy.order_number.toString()
+                                    )
+                                    val action =
+                                        InvoiceListFragmentDirections.actionInvoiceListToStockHistoryFragment(
+                                            key,
+                                            OrderGroupBy.order_number.name,
+                                            null
+                                        )
+
+                                    navController.navigate(
+                                        action
+                                    )
+
+//                                    scope.launch {
+//                                        getStockForSimilarOrders(key)
+//                                    }
                                 })
                             Column() {
                                 Row(

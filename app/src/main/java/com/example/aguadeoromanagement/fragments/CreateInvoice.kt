@@ -10,9 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavDirections
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.aguadeoromanagement.Constants
@@ -21,14 +18,10 @@ import com.example.aguadeoromanagement.adapters.CreateInvoiceStockAdapter
 import com.example.aguadeoromanagement.databinding.FragmentCreateInvoiceBinding
 import com.example.aguadeoromanagement.models.*
 import com.example.aguadeoromanagement.networking.APIFetcher
-import com.example.aguadeoromanagement.networking.api.linkStockHistoryToInvoice
 import com.google.android.material.datepicker.MaterialDatePicker
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import kotlin.coroutines.coroutineContext
 
 class CreateInvoice : Fragment() {
     private val binding by lazy {

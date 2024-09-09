@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.aguadeoromanagement.ManagementApplication
 import com.example.aguadeoromanagement.models.Invoice
@@ -87,7 +88,7 @@ class InvoiceListFragment : Fragment() {
                         daysBeforeNow = viewModel.daysBeforeNow.value,
                         selectedDate = viewModel.selectedDate.value,
                         updateDate = { newDays, newDate -> viewModel.updateDate(newDays, newDate) },
-
+                        navController = findNavController()
                         )
                 }
             }

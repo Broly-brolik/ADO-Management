@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_HomeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_stockHistoryFragment"
+            app:destination="@id/stockHistoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/ordersManagement"
@@ -81,6 +84,9 @@
         <action
             android:id="@+id/action_suppliersManagement_to_invoiceDetailsV2"
             app:destination="@id/invoiceDetailsV2" />
+        <action
+            android:id="@+id/action_suppliersManagement_to_stockHistoryFragment"
+            app:destination="@id/stockHistoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/suppliersList"
@@ -193,6 +199,9 @@
         <action
             android:id="@+id/action_invoiceList_to_invoiceDetails"
             app:destination="@id/invoiceDetails" />
+        <action
+            android:id="@+id/action_invoiceList_to_stockHistoryFragment"
+            app:destination="@id/stockHistoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/invoiceDetailsV2"
@@ -209,4 +218,19 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.aguadeoromanagement.fragments.SettingsFragment"
         android:label="Settings" />
+    <fragment
+        android:id="@+id/stockHistoryFragment"
+        android:name="com.example.aguadeoromanagement.fragments.StockHistoryFragment"
+        android:label="In/Out" >
+        <argument
+            android:name="order_number"
+            app:argType="string"
+            app:nullable="true" />
+        <argument android:name="grouping"
+            app:argType="string" />
+        <argument
+            android:name="supplier"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>

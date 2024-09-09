@@ -13,6 +13,11 @@
         android:title="New Invoice"
         app:showAsAction="always" />
     <item
+        android:id="@+id/action_in_out"
+        android:orderInCategory="100"
+        android:title="In/Out"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_email"
         android:orderInCategory="100"
         android:title="Email"
