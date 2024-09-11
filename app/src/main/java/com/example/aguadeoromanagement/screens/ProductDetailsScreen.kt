@@ -20,10 +20,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.aguadeoromanagement.ManagementApplication
+import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.components.Spinner
 import com.example.aguadeoromanagement.models.Inventory
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
+
 
 @Composable
 fun ProductDetailsScreen(
@@ -32,7 +34,8 @@ fun ProductDetailsScreen(
     allCodes: List<String>,
     onCodeSelected: () -> Unit,
     inventory: Inventory? = null,
-    productHistory: List<Map<String, String>>
+    productHistory: List<Map<String, String>>,
+    onNavigate: () -> Unit,
 ) {
 
     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()) {
@@ -47,6 +50,13 @@ fun ProductDetailsScreen(
 //            return@Box
         } else {
             ProductDetails(inventory = inventory, productHistory = productHistory)
+            Button(onClick = {
+                onNavigate()
+            }) {
+                Text("Go to current location")
+            }
+
+
 //            return@Box
         }
     }

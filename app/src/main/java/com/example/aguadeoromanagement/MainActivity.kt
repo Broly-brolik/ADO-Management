@@ -19,6 +19,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.aguadeoromanagement.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import com.reader.bluetooth.lib.BuildConfig
 
 class MainActivity : AppCompatActivity() {
 
@@ -70,3 +71,16 @@ class MainActivity : AppCompatActivity() {
 
 
 }
+
+/*
+
+dans productdetailsfragments là j'ai mon ProductDetailsScreen
+ajouter une methode onNavigate qui va prendre mon navController
+(pcq dans le fragment tu peux avoir un navcontroller et pas ailleurs)
+ du coup passe ça au ProductDetailsScreen (ajouter une méthodeà mettre
+ dans le button onClick) et comme méthode tu vas simplement bouger
+ jusqu'à la vue du inventoryFragments. .. aller dans navGraph relier
+ les 2 ProductDetailsScreen à inventroyFragment. 2) Ensuite ajouter un
+ parametre newLabel, modifier le inventoryViewModel.
+
+ */

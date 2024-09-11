@@ -6,7 +6,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.screens.ProductDetailsScreen
 import com.example.aguadeoromanagement.ui.theme.ManagementTheme
 import com.example.aguadeoromanagement.viewmodels.InvoiceListViewModelFactory
@@ -60,9 +62,8 @@ class ProductDetailsFragment : Fragment() {
                             }
                         },
                         inventory = viewModel.currentInventory.value,
-                        productHistory = viewModel.productHistory.value
-
-
+                        productHistory = viewModel.productHistory.value,
+                        onNavigate = { findNavController().navigate(R.id.action_singleInventory_to_inventory2) }
                     )
 
                 }
