@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.aguadeoromanagement.ManagementApplication
-import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.components.Spinner
 import com.example.aguadeoromanagement.models.Inventory
 import kotlin.reflect.full.declaredMemberProperties
@@ -53,7 +52,7 @@ fun ProductDetailsScreen(
             Button(onClick = {
                 onNavigate()
             }) {
-                Text("Go to current location")
+                Text("Go to current ID-location")
             }
 
 

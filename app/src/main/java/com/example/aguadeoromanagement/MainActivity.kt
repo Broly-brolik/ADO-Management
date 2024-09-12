@@ -80,7 +80,10 @@ ajouter une methode onNavigate qui va prendre mon navController
  du coup passe ça au ProductDetailsScreen (ajouter une méthodeà mettre
  dans le button onClick) et comme méthode tu vas simplement bouger
  jusqu'à la vue du inventoryFragments. .. aller dans navGraph relier
- les 2 ProductDetailsScreen à inventroyFragment. 2) Ensuite ajouter un
- parametre newLabel, modifier le inventoryViewModel.
+ les 2 ProductDetailsScreen à inventroyFragment.
+
+ 2) Ensuite ajouter un parametre lui mettre newLabel, modifier le inventoryViewModel. Modifier
+  pour qu'il puisse prendre
+ un parametre d'entrée comme ça currentcheckid tu pourrais le modifer.
 
  */
