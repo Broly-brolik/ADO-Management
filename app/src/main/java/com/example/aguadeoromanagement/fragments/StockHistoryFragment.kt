@@ -10,7 +10,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
@@ -25,6 +28,7 @@ import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.databinding.FragmentHomeBinding
 import com.example.aguadeoromanagement.screens.InOutContainerV2
 import com.example.aguadeoromanagement.screens.ProductDetailsScreen
+import com.example.aguadeoromanagement.screens.StockHistoryScreen
 import com.example.aguadeoromanagement.ui.theme.ManagementTheme
 import com.example.aguadeoromanagement.viewmodels.ProductDetailsViewModel
 import com.example.aguadeoromanagement.viewmodels.ProductDetailsViewModelFactory
@@ -48,25 +52,22 @@ class StockHistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         setHasOptionsMenu(true)
-        Log.e("args group", args.grouping)
-        if (args.orderNumber.isNullOrEmpty()){
-            Log.e("null", "comme un vers")
-        }
-        Log.e("args order number", args.orderNumber.orEmpty())
-        Log.e("args order number", args.supplier.orEmpty())
+
 
 
         return ComposeView(requireContext()).apply {
 
             setContent {
                 ManagementTheme {
-                    val viewModel: StockHistoryViewModel = viewModel(factory = StockHistoryViewModelFactory(args.grouping, args.orderNumber.orEmpty(), args.supplier.orEmpty()))
-                    InOutContainerV2(
-                        inOutList = viewModel.orderNumbers.value,
-                        loadingItems = false,
-                        modifier = Modifier,
-                        navController = findNavController()
+                    val viewModel: StockHistoryViewModel = viewModel(
+                        factory = StockHistoryViewModelFactory(
+                            args.grouping,
+                            args.orderNumber.orEmpty(),
+                            args.supplier.orEmpty()
+                        )
                     )
+
+                    StockHistoryScreen(orderNumbers = viewModel.orderNumbers.value, loading = viewModel.loading.value, navController = findNavController())
                 }
             }
 

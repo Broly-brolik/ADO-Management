@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.aguadeoromanagement.enums.OrderGroupBy
 import com.example.aguadeoromanagement.models.StockHistory
 import com.example.aguadeoromanagement.networking.api.getStockForSimilarOrders
+import com.example.aguadeoromanagement.networking.api.getStockForSupplier
 import kotlinx.coroutines.launch
 
 class StockHistoryViewModelFactory(
@@ -25,17 +26,18 @@ class StockHistoryViewModelFactory(
 class StockHistoryViewModel(groupBy: String, orderNumber: String, supplier: String) : ViewModel() {
 
     var orderNumbers = mutableStateOf(listOf<StockHistory>())
+    var loading = mutableStateOf(true)
 
     //    var orderNumbers= mutableStateOf(mapOf<String, List<StockHistory>>())
     init {
-        Log.e("init stock history viewmodel", "$groupBy - $orderNumber - $supplier")
         viewModelScope.launch {
             if (groupBy == OrderGroupBy.order_number.name) {
                 orderNumbers.value = getStockForSimilarOrders(orderNumber)
             }
             else if(groupBy == OrderGroupBy.supplier.name){
-
+                orderNumbers.value = getStockForSupplier(supplier)
             }
+            loading.value = false
 
         }
     }
