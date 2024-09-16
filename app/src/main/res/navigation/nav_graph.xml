@@ -188,12 +188,8 @@
             android:name="inventoryCode"
             app:argType="string"
             app:nullable="true" />
-        <argument
-            android:name="locationID"
-            app:argType="integer"
-            android:defaultValue="-1" />
         <action
-            android:id="@+id/action_singleInventory_to_inventory2"
+            android:id="@+id/action_singleInventory_to_inventory"
             app:destination="@id/inventory" />
     </fragment>
     <fragment

@@ -63,9 +63,11 @@ class ProductDetailsFragment : Fragment() {
                         },
                         inventory = viewModel.currentInventory.value,
                         productHistory = viewModel.productHistory.value,
-                        onNavigate = { findNavController().navigate(R.id.action_singleInventory_to_inventory2) }
+                        navigateToLocation = {
+                            val action = ProductDetailsFragmentDirections.actionSingleInventoryToInventory()
+                            findNavController().navigate(action)
+                        }
                     )
-
                 }
             }
         }
