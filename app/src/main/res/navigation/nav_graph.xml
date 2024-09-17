@@ -171,6 +171,9 @@
         android:id="@+id/inventory"
         android:name="com.example.aguadeoromanagement.fragments.InventoryFragment"
         android:label="Inventory" >
+        <argument
+            android:name="locationId"
+            app:argType="integer" />
         <action
             android:id="@+id/action_inventory_to_singleInventory"
             app:destination="@id/singleInventory" />

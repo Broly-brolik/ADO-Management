@@ -93,7 +93,7 @@ fun ProductDetails(inventory: Inventory, productHistory: List<Map<String, String
         mutableStateOf(0)
     }
 
-    val location by remember { mutableStateOf(inventory.idLocation.toIntOrNull() ?: 0) }
+    val location = inventory.idLocation.toIntOrNull() ?: 0
     Log.d("ProductDetails", "Inventory location: $location")
 
     Column(

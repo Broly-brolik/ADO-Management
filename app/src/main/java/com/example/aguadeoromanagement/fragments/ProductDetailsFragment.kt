@@ -64,7 +64,7 @@ class ProductDetailsFragment : Fragment() {
                         inventory = viewModel.currentInventory.value,
                         productHistory = viewModel.productHistory.value,
                         navigateToLocation = {
-                            val action = ProductDetailsFragmentDirections.actionSingleInventoryToInventory()
+                            val action = ProductDetailsFragmentDirections.actionSingleInventoryToInventory(21)
                             findNavController().navigate(action)
                         }
                     )
