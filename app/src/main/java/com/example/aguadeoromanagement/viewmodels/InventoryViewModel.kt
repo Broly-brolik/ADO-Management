@@ -38,6 +38,7 @@ class InventoryViewModelFactory(private val locationId: Int) :
 
 
 class InventoryViewModel(locationId: Int) : ViewModel() {
+    //val inventoryListState = mutableStateOf(InventoryListState(currentLocation = locationId-1))
     val inventoryListState = mutableStateOf(InventoryListState())
     val deviceConnected = mutableStateOf(false)
     val scanningLocation = mutableStateOf(false)

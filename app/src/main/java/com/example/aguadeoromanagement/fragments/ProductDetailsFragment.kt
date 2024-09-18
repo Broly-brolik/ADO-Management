@@ -10,7 +10,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.screens.ProductDetailsScreen
+import com.example.aguadeoromanagement.states.InventoryListState
 import com.example.aguadeoromanagement.ui.theme.ManagementTheme
+import com.example.aguadeoromanagement.viewmodels.InventoryViewModelFactory
 import com.example.aguadeoromanagement.viewmodels.InvoiceListViewModelFactory
 import com.example.aguadeoromanagement.viewmodels.ProductDetailsViewModel
 import com.example.aguadeoromanagement.viewmodels.ProductDetailsViewModelFactory
@@ -51,6 +53,8 @@ class ProductDetailsFragment : Fragment() {
                 ManagementTheme {
                     val viewModel: ProductDetailsViewModel = viewModel(factory = ProductDetailsViewModelFactory(inventoryCode))
                     val scope = viewModel.viewModelScope
+                    //val viewModel2: InventoryViewModel = viewModel2(
+                     //   factory = InventoryViewModelFactory(startingLocationIndex)
 
                     ProductDetailsScreen(
                         currentCode = viewModel.currentCode.value,
@@ -64,7 +68,7 @@ class ProductDetailsFragment : Fragment() {
                         inventory = viewModel.currentInventory.value,
                         productHistory = viewModel.productHistory.value,
                         navigateToLocation = {
-                            val action = ProductDetailsFragmentDirections.actionSingleInventoryToInventory(21)
+                            val action = ProductDetailsFragmentDirections.actionSingleInventoryToInventory(33)
                             findNavController().navigate(action)
                         }
                     )

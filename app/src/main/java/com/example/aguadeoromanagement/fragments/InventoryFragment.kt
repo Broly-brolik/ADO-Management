@@ -210,13 +210,14 @@ class InventoryFragment : Fragment() {
                     val viewModel: InventoryViewModelFactory.InventoryViewModel = viewModel(
                         factory = InventoryViewModelFactory(startingLocationIndex)
                     )
-                    //val viewModel =
-                    //    InventoryViewModelFactory.InventoryViewModel(startingLocationIndex)
-                    Log.d("myTag", startingLocationIndex.toString())
                     val state = viewModel.inventoryListState.value
-
-                    Log.d("mytag", state.toString())
                     val coroutineScope = rememberCoroutineScope()
+
+                    LaunchedEffect(Unit) {
+                        viewModel.inventoryListState.value = viewModel.inventoryListState.value.copy(
+                            currentLocation = startingLocationIndex-1
+                        )
+                    }
 
                     LaunchedEffect(key1 = true, block = {
                         viewModel.viewModelScope.launch {

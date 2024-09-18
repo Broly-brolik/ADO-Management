@@ -222,7 +222,6 @@ fun InventoryScreen(
                     if (!showMissingLocation) {
                         Text("Location: ")
                         Column {
-                            Log.d("myTag", inventoryState.currentLocation.toString())
                             Spinner(
                                 entries = inventoryState.allLocations,
                                 index = inventoryState.currentLocation,
