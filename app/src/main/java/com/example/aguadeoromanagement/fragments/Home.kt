@@ -101,10 +101,13 @@ class Home : Fragment() {
 //            findNavController(requireView()).navigate(R.id.action_FirstFragment_to_paymentsList)
         }
 
-        binding.inventoryBtn.setOnClickListener {
-            findNavController(requireView()).navigate(R.id.action_FirstFragment_to_inventory)
-        }
-
+        //binding.inventoryBtn.setOnClickListener {
+         //   findNavController(requireView()).navigate(R.id.action_FirstFragment_to_inventory)
+       // }
+                binding.inventoryBtn.setOnClickListener {
+                    val action = HomeDirections.actionFirstFragmentToInventory( 1)
+                    findNavController(requireView()).navigate(action)
+                }
         binding.productBtn.setOnClickListener {
             findNavController(requireView()).navigate(R.id.action_FirstFragment_to_productsFragment)
         }

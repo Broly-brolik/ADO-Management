@@ -48,7 +48,9 @@ fun ProductDetailsScreen(
             )
 //            return@Box
         } else {
-            ProductDetails(inventory = inventory, productHistory = productHistory, navigateToLocation = { navigateToLocation(21)} )
+            val locationId = inventory.idLocation.toIntOrNull() ?: 0  // Convert to Int or use a default value of 0
+
+            ProductDetails(inventory = inventory, productHistory = productHistory, navigateToLocation = { navigateToLocation(locationId)} )
 //            return@Box
         }
     }

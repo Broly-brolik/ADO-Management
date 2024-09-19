@@ -213,11 +213,11 @@ class InventoryFragment : Fragment() {
                     val state = viewModel.inventoryListState.value
                     val coroutineScope = rememberCoroutineScope()
 
-                    LaunchedEffect(Unit) {
+                    /*LaunchedEffect(Unit) {
                         viewModel.inventoryListState.value = viewModel.inventoryListState.value.copy(
                             currentLocation = startingLocationIndex-1
                         )
-                    }
+                    }*/
 
                     LaunchedEffect(key1 = true, block = {
                         viewModel.viewModelScope.launch {

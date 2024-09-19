@@ -1,6 +1,7 @@
 package com.example.aguadeoromanagement.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
@@ -52,9 +53,8 @@ class ProductDetailsFragment : Fragment() {
             setContent {
                 ManagementTheme {
                     val viewModel: ProductDetailsViewModel = viewModel(factory = ProductDetailsViewModelFactory(inventoryCode))
+//faire passer 0 dans le fragment home to inventory
                     val scope = viewModel.viewModelScope
-                    //val viewModel2: InventoryViewModel = viewModel2(
-                     //   factory = InventoryViewModelFactory(startingLocationIndex)
 
                     ProductDetailsScreen(
                         currentCode = viewModel.currentCode.value,
@@ -67,8 +67,8 @@ class ProductDetailsFragment : Fragment() {
                         },
                         inventory = viewModel.currentInventory.value,
                         productHistory = viewModel.productHistory.value,
-                        navigateToLocation = {
-                            val action = ProductDetailsFragmentDirections.actionSingleInventoryToInventory(33)
+                        navigateToLocation = { locationId ->
+                            val action = ProductDetailsFragmentDirections.actionSingleInventoryToInventory(locationId)
                             findNavController().navigate(action)
                         }
                     )
