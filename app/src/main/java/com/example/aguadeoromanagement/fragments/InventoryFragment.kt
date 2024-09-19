@@ -17,13 +17,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.example.aguadeoromanagement.ManagementApplication
 import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.enums.InventoryCheckState
 import com.example.aguadeoromanagement.screens.CheckInventoryScreen
 import com.example.aguadeoromanagement.screens.InventoryScreen
 import com.example.aguadeoromanagement.ui.theme.ManagementTheme
-import com.example.aguadeoromanagement.viewmodels.InventoryViewModel
+import com.example.aguadeoromanagement.viewmodels.InventoryViewModelFactory
 import com.reader.bluetooth.lib.builder.vh.vh88.VH88IBluetoothRFIDReader
 import com.reader.bluetooth.lib.listener.ConnectCallback
 import kotlinx.coroutines.*
@@ -32,8 +33,10 @@ import java.lang.reflect.Method
 //import com.example.screens.PaymentListScreen
 
 class InventoryFragment : Fragment() {
+    private val args by navArgs<InventoryFragmentArgs>()
 
     private val REQUEST_BLUETOOTH_PERMISSION = 2
+    private var startingLocationIndex = 0
     lateinit var connect: () -> Unit
     private var bluetoothDevice: BluetoothDevice? = null
     var connectThread: ConnectThread? = null
@@ -51,6 +54,11 @@ class InventoryFragment : Fragment() {
     var showSummaryLocation: () -> Unit = {}
     var saveCheck: () -> Unit = {}
     var startTransfer: () -> Unit = {}
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        args.let { startingLocationIndex = it.locationId }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
@@ -199,10 +207,17 @@ class InventoryFragment : Fragment() {
 
             setContent {
                 ManagementTheme {
-                    val viewModel: InventoryViewModel = viewModel()
+                    val viewModel: InventoryViewModelFactory.InventoryViewModel = viewModel(
+                        factory = InventoryViewModelFactory(startingLocationIndex)
+                    )
                     val state = viewModel.inventoryListState.value
                     val coroutineScope = rememberCoroutineScope()
 
+                    /*LaunchedEffect(Unit) {
+                        viewModel.inventoryListState.value = viewModel.inventoryListState.value.copy(
+                            currentLocation = startingLocationIndex-1
+                        )
+                    }*/
 
                     LaunchedEffect(key1 = true, block = {
                         viewModel.viewModelScope.launch {

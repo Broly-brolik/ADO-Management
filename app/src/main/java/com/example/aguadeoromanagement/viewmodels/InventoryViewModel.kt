@@ -3,7 +3,10 @@ package com.example.aguadeoromanagement.viewmodels
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.aguadeoromanagement.Constants
 import com.example.aguadeoromanagement.ManagementApplication
@@ -28,9 +31,15 @@ import java.time.LocalDateTime
 import java.util.*
 import java.util.stream.Collectors
 
+class InventoryViewModelFactory(private val locationId: Int) :
+    ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        InventoryViewModel(locationId) as T
 
-class InventoryViewModel : ViewModel() {
-    val inventoryListState = mutableStateOf(InventoryListState())
+
+class InventoryViewModel(locationId: Int) : ViewModel() {
+    val inventoryListState = mutableStateOf(InventoryListState(currentLocation = locationId-1))
+    //val inventoryListState = mutableStateOf(InventoryListState())
     val deviceConnected = mutableStateOf(false)
     val scanningLocation = mutableStateOf(false)
     val showPopup = mutableStateOf(false)
@@ -53,8 +62,7 @@ class InventoryViewModel : ViewModel() {
     var checkScreenLoading = mutableStateOf(false)
     var showMissingLocation = mutableStateOf(false)
 
-
-    init {
+        init {
 
 //        val inv1 = listOf("S-1422", "S-1194", "S-1337", "S-1420", "M-1128", "M-1143", "C-433", "C-264", "O-382", "O-1101", "B-282", "B-118", "A-120", "O-249", "O-379", "O-380", "O-374", "O-375", "O-381", "C-469", "C-509")
 //        val det1 = listOf("S-1422", "S-1194", "S-1337", "S-1420", "M-1128", "M-1143", "C-433", "C-264", "O-382", "O-1101", "B-282", "B-118", "A-120", "O-249", "O-379", "O-380", "O-374", "O-375", "O-381", "C-469")
@@ -479,7 +487,6 @@ class InventoryViewModel : ViewModel() {
 
     suspend fun fetchLocationInventory(locationID: Int) {
 
-
         inventoryListState.value = inventoryListState.value.copy(loading = true)
         inventoryListState.value =
             inventoryListState.value.copy(
@@ -764,7 +771,7 @@ class InventoryViewModel : ViewModel() {
 
 
     private suspend fun getInventoryForLocation(locationID: Int): List<Inventory> {
-        Log.e("lcation id man", locationID.convertMiloID().toString())
+        Log.e("location id man", locationID.convertMiloID().toString())
         return withContext(Dispatchers.IO) {
             val query =
                 "select * FROM Inventory where CurrentLocationID = ${locationID.convertMiloID()} and Status='Stock' order by Inventory.CatalogCode asc;"
@@ -936,6 +943,5 @@ class InventoryViewModel : ViewModel() {
 
         }
     }
-
-
 }
+    }

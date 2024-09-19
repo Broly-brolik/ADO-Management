@@ -171,6 +171,9 @@
         android:id="@+id/inventory"
         android:name="com.example.aguadeoromanagement.fragments.InventoryFragment"
         android:label="Inventory" >
+        <argument
+            android:name="locationId"
+            app:argType="integer" />
         <action
             android:id="@+id/action_inventory_to_singleInventory"
             app:destination="@id/singleInventory" />
@@ -178,7 +181,8 @@
     <fragment
         android:id="@+id/productsFragment"
         android:name="com.example.aguadeoromanagement.fragments.ProductsFragment"
-        android:label="Products" />
+        android:label="Products" >
+    </fragment>
     <fragment
         android:id="@+id/singleInventory"
         android:name="com.example.aguadeoromanagement.fragments.ProductDetailsFragment"
@@ -187,6 +191,9 @@
             android:name="inventoryCode"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_singleInventory_to_inventory"
+            app:destination="@id/inventory" />
     </fragment>
     <fragment
         android:id="@+id/statisticsFragment"

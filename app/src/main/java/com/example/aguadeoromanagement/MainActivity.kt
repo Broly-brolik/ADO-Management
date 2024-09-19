@@ -19,6 +19,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.aguadeoromanagement.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import com.reader.bluetooth.lib.BuildConfig
 
 class MainActivity : AppCompatActivity() {
 

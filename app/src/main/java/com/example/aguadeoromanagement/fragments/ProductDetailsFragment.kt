@@ -1,14 +1,19 @@
 package com.example.aguadeoromanagement.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.screens.ProductDetailsScreen
+import com.example.aguadeoromanagement.states.InventoryListState
 import com.example.aguadeoromanagement.ui.theme.ManagementTheme
+import com.example.aguadeoromanagement.viewmodels.InventoryViewModelFactory
 import com.example.aguadeoromanagement.viewmodels.InvoiceListViewModelFactory
 import com.example.aguadeoromanagement.viewmodels.ProductDetailsViewModel
 import com.example.aguadeoromanagement.viewmodels.ProductDetailsViewModelFactory
@@ -48,6 +53,7 @@ class ProductDetailsFragment : Fragment() {
             setContent {
                 ManagementTheme {
                     val viewModel: ProductDetailsViewModel = viewModel(factory = ProductDetailsViewModelFactory(inventoryCode))
+//faire passer 0 dans le fragment home to inventory
                     val scope = viewModel.viewModelScope
 
                     ProductDetailsScreen(
@@ -60,11 +66,12 @@ class ProductDetailsFragment : Fragment() {
                             }
                         },
                         inventory = viewModel.currentInventory.value,
-                        productHistory = viewModel.productHistory.value
-
-
+                        productHistory = viewModel.productHistory.value,
+                        navigateToLocation = { locationId ->
+                            val action = ProductDetailsFragmentDirections.actionSingleInventoryToInventory(locationId)
+                            findNavController().navigate(action)
+                        }
                     )
-
                 }
             }
         }

@@ -25,6 +25,7 @@ import com.example.aguadeoromanagement.models.Inventory
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
 
+
 @Composable
 fun ProductDetailsScreen(
     currentCode: String,
@@ -32,7 +33,8 @@ fun ProductDetailsScreen(
     allCodes: List<String>,
     onCodeSelected: () -> Unit,
     inventory: Inventory? = null,
-    productHistory: List<Map<String, String>>
+    productHistory: List<Map<String, String>>,
+    navigateToLocation: (Int) -> Unit,
 ) {
 
     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()) {
@@ -46,7 +48,9 @@ fun ProductDetailsScreen(
             )
 //            return@Box
         } else {
-            ProductDetails(inventory = inventory, productHistory = productHistory)
+            val locationId = inventory.idLocation.toIntOrNull() ?: 0  // Convert to Int or use a default value of 0
+
+            ProductDetails(inventory = inventory, productHistory = productHistory, navigateToLocation = { navigateToLocation(locationId)} )
 //            return@Box
         }
     }
@@ -85,11 +89,14 @@ fun SelectCode(
 }
 
 @Composable
-fun ProductDetails(inventory: Inventory, productHistory: List<Map<String, String>>) {
+fun ProductDetails(inventory: Inventory, productHistory: List<Map<String, String>>, navigateToLocation : (Int)-> Unit) {
     var showChangeStatus by remember { mutableStateOf(false) }
     var newStatusIndex by remember {
         mutableStateOf(0)
     }
+
+    val location = inventory.idLocation.toIntOrNull() ?: 0
+    Log.d("ProductDetails", "Inventory location: $location")
 
     Column(
         Modifier
@@ -118,10 +125,12 @@ fun ProductDetails(inventory: Inventory, productHistory: List<Map<String, String
                     )
                 }
                 Column() {
+
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text("Status", fontSize = 20.sp)
                         Text(inventory.status, fontSize = 20.sp)
                     }
+
                     Row() {
 
                         if (!showChangeStatus) {
@@ -133,6 +142,7 @@ fun ProductDetails(inventory: Inventory, productHistory: List<Map<String, String
                                 Text("Validate status")
                             }
                         }
+
                         if (showChangeStatus) {
                             Spinner(
                                 entries = ManagementApplication.getAppOptionValues().filter { it.type == "InventoryAction" }.map{it.optionValue},
@@ -140,6 +150,9 @@ fun ProductDetails(inventory: Inventory, productHistory: List<Map<String, String
                                 label = "New status",
                                 onValueChange = { newVal -> newStatusIndex = newVal })
                         }
+                    }
+                    Button(onClick = { navigateToLocation(location) }) {
+                    Text("Go to Location $location")
                     }
                 }
             }
@@ -186,8 +199,6 @@ fun ProductDetails(inventory: Inventory, productHistory: List<Map<String, String
 
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(date, fontWeight = FontWeight.Bold)
-                        Text(content)
-
                     }
                 }
             }
@@ -195,3 +206,4 @@ fun ProductDetails(inventory: Inventory, productHistory: List<Map<String, String
     }
 
 }
+

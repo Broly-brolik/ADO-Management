@@ -34,6 +34,7 @@ import com.example.aguadeoromanagement.states.DetectedCodes
 import com.example.aguadeoromanagement.states.InventoryListState
 import com.example.aguadeoromanagement.ui.theme.MainGreen
 import com.example.aguadeoromanagement.ui.theme.Shapes
+import com.example.aguadeoromanagement.viewmodels.InventoryViewModelFactory
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -70,6 +71,7 @@ fun InventoryScreen(
     changeShowMissing: () -> Unit,
     addRemoveSelected: (String, Boolean) -> Unit,
     validateSelected: (Boolean, Int?) -> Unit
+
 ) {
 
     val inventoryCodes = inventoryState.inventoryList.map { it.inventoryCode }.toSet()
