@@ -28,7 +28,7 @@ class ContactInvoiceListViewModel(contact: Contact) : ViewModel() {
         viewModelScope.launch {
             Log.e("lets goo", "come on")
             openInvoices.value = getSupplierInvoices(contact).first
-//            closedInvoices.value = getSupplierInvoices(contact, true).first
+            closedInvoices.value = getSupplierInvoices(contact, true).first
             loading.value = false
         }
     }

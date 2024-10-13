@@ -91,7 +91,9 @@ public class SuppliersManagement extends Fragment {
                 setWriteMode(true);
         }
         else if (item.getItemId() == R.id.action_all_invoices){
-            Navigation.findNavController(getView()).navigate(R.id.action_suppliersManagement_to_allInvoices);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("contact", contact);
+            Navigation.findNavController(getView()).navigate(R.id.action_suppliersManagement_to_allInvoices, bundle);
         }
         else if (item.getItemId() ==R.id.action_in_out){
             SuppliersManagementDirections.ActionSuppliersManagementToStockHistoryFragment action = SuppliersManagementDirections.actionSuppliersManagementToStockHistoryFragment(null, OrderGroupBy.supplier.name(), contact_name);
