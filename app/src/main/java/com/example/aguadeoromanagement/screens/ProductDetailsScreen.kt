@@ -1,6 +1,7 @@
 package com.example.aguadeoromanagement.screens
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,25 +37,27 @@ fun ProductDetailsScreen(
     productHistory: List<Map<String, String>>,
     navigateToLocation: (Int) -> Unit,
 ) {
+    Column(modifier = Modifier.fillMaxSize()) {
 
-    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()) {
+        SelectCode(
+            currentCode = currentCode,
+            onChange = { newCode -> changeCurrentCode(newCode) },
+            allCodes = allCodes,
+            onSelect = onCodeSelected
+        )
 
-        if (inventory == null) {
-            SelectCode(
-                currentCode = currentCode,
-                onChange = { newCode: String -> changeCurrentCode(newCode) },
-                allCodes = allCodes,
-                onSelect = onCodeSelected
-            )
-//            return@Box
-        } else {
-            val locationId = inventory.idLocation.toIntOrNull() ?: 0  // Convert to Int or use a default value of 0
-
-            ProductDetails(inventory = inventory, productHistory = productHistory, navigateToLocation = { navigateToLocation(locationId)} )
-//            return@Box
+        Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()) {
+            // Check if an inventory item is selected
+            if (inventory != null) {
+                val locationId = inventory.idLocation.toIntOrNull() ?: 0
+                ProductDetails(
+                    inventory = inventory,
+                    productHistory = productHistory,
+                    navigateToLocation = { navigateToLocation(locationId) }
+                )
+            }
         }
     }
-
 }
 
 @Composable
@@ -64,25 +67,42 @@ fun SelectCode(
     allCodes: List<String>,
     onSelect: () -> Unit
 ) {
-    Column() {
+    var isCodeSelected by remember { mutableStateOf(false) }
+
+    Column {
         TextField(
             value = currentCode,
-            onValueChange = { newVal: String -> onChange(newVal) },
-            placeholder = {
-                Text(
-                    text = "Inventory code"
-                )
-            })
-        if (currentCode.length > 1) {
-            LazyColumn() {
-                items(allCodes.filter { it.contains(currentCode) }) {
-                    Text(it, modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .clickable {
-                            onChange(it)
-                            onSelect()
-                        })
+            onValueChange = { newVal ->
+                onChange(newVal)
+                isCodeSelected = false
+            },
+            placeholder = { Text("Inventory code") },
+            modifier = Modifier.width(200.dp)
+        )
+
+        if (currentCode.isNotEmpty() && !isCodeSelected) {
+            LazyColumn {
+                items(allCodes.filter { it.contains(currentCode, ignoreCase = true) }) { code ->
+                    Text(
+                        text = code,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .clickable {
+                                onChange(code)
+                                isCodeSelected = true
+                                onSelect()
+                            }
+                    )
                 }
+            }
+        }
+        if (isCodeSelected) {
+            Button(onClick = {
+                onChange("")
+                isCodeSelected = false
+            }) {
+                Text("New Search")
             }
         }
     }
@@ -96,7 +116,6 @@ fun ProductDetails(inventory: Inventory, productHistory: List<Map<String, String
     }
 
     val location = inventory.idLocation.toIntOrNull() ?: 0
-    Log.d("ProductDetails", "Inventory location: $location")
 
     Column(
         Modifier
@@ -105,16 +124,19 @@ fun ProductDetails(inventory: Inventory, productHistory: List<Map<String, String
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
+
         Column(
             Modifier
                 .fillMaxWidth()
                 .weight(2f)
         ) {
+
             Text(
                 inventory.inventoryCode,
                 fontWeight = FontWeight.Bold,
                 fontSize = 32.sp,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+
             )
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Column() {
@@ -175,8 +197,20 @@ fun ProductDetails(inventory: Inventory, productHistory: List<Map<String, String
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(memberList) {
-                    Text(it)
+                items(memberList) { member ->
+                    val propertyName = member.split(" - ")[0]
+                    val propertyValue = member.split(" - ")[1]
+                    if (propertyName in listOf("carat", "color", "price", "size", "idLocation")) {
+                        Box(
+                            modifier = Modifier
+                                .background(androidx.compose.ui.graphics.Color.Yellow)
+                                .padding(2.dp)
+                        ) {
+                            Text(text = "$propertyName - $propertyValue", color = androidx.compose.ui.graphics.Color.Black)
+                        }
+                    } else {
+                        Text(text = member)
+                    }
                 }
             }
         }

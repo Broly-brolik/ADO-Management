@@ -1,6 +1,7 @@
 package com.example.aguadeoromanagement.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -128,7 +129,7 @@ fun AddProductScreen(
                 CustomTextField(
                     value = inventory.color,
                     onChange = { inventory = inventory.copy(color = it) },
-                    "Color"
+                    "Color",
                 )
                 CustomTextField(
                     value = inventory.weight,
@@ -176,7 +177,7 @@ fun AddProductScreen(
                 CustomTextField(
                     value = inventory.carat,
                     onChange = { inventory = inventory.copy(carat = it) },
-                    "Carat"
+                    "Carat",
                 )
                 CustomTextField(
                     value = inventory.stoneColor,
@@ -364,7 +365,7 @@ fun CustomTextField(
     onChange: (newVal: String) -> Unit,
     label: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     TextField(
         value = value,
@@ -373,8 +374,6 @@ fun CustomTextField(
             Text(label)
         },
         keyboardOptions = keyboardOptions,
-        modifier = modifier
-//        modifier = Modifier.fillMaxWidth(0.3f)
+        modifier = modifier,
     )
-
 }

@@ -181,8 +181,7 @@
     <fragment
         android:id="@+id/productsFragment"
         android:name="com.example.aguadeoromanagement.fragments.ProductsFragment"
-        android:label="Products" >
-    </fragment>
+        android:label="Products" />
     <fragment
         android:id="@+id/singleInventory"
         android:name="com.example.aguadeoromanagement.fragments.ProductDetailsFragment"

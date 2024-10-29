@@ -28,9 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var menu: Menu
     private lateinit var navController: NavController
 
-    var back_button_action = {
-//        Log.e("hey", "bien")
-    }
+    var back_button_action = { }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -61,7 +59,6 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
