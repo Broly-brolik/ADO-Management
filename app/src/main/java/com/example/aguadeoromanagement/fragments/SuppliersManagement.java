@@ -23,12 +23,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aguadeoromanagement.Constants;
-import com.example.aguadeoromanagement.MainActivity;
 import com.example.aguadeoromanagement.R;
 import com.example.aguadeoromanagement.adapters.suppliersFragment.SupplierHistoryAdapter;
 import com.example.aguadeoromanagement.adapters.suppliersFragment.SupplierOrdersHistoryAdapter;
 import com.example.aguadeoromanagement.adapters.suppliersFragment.SuppliersInvoicesHistory;
 import com.example.aguadeoromanagement.databinding.FragmentSuppliersManagementBinding;
+import com.example.aguadeoromanagement.dialogs.InStockHistoryDialog;
 import com.example.aguadeoromanagement.enums.OrderGroupBy;
 import com.example.aguadeoromanagement.models.Contact;
 import com.example.aguadeoromanagement.models.ContactHistory;
@@ -36,10 +36,8 @@ import com.example.aguadeoromanagement.models.Invoice;
 import com.example.aguadeoromanagement.models.Payment;
 import com.example.aguadeoromanagement.models.SupplierOrderMain;
 import com.example.aguadeoromanagement.utils.Functions;
-import com.example.aguadeoromanagement.utils.FunctionsKt.*;
 import com.example.aguadeoromanagement.networking.APIFetcher;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
@@ -68,6 +66,7 @@ public class SuppliersManagement extends Fragment {
     private Button saveEditContact;
     private int contact_id;
     private String contact_name;
+
 
 
     @Override
@@ -99,6 +98,7 @@ public class SuppliersManagement extends Fragment {
             SuppliersManagementDirections.ActionSuppliersManagementToStockHistoryFragment action = SuppliersManagementDirections.actionSuppliersManagementToStockHistoryFragment(null, OrderGroupBy.supplier.name(), contact_name);
             Navigation.findNavController(getView()).navigate(action);
         }
+
 //        switch (item.getItemId()) {
 //            case R.id.action_new_invoice:
 //
@@ -168,9 +168,13 @@ public class SuppliersManagement extends Fragment {
             }
         });
 
-
+        Button buttonOpenDialog = binding.buttonOpenDialog;
+        buttonOpenDialog.setOnClickListener(v -> {
+            List<SupplierOrderMain> selectedItems = ((SupplierOrdersHistoryAdapter) binding.openOrdersList.getAdapter()).getSelectedItems();
+            InStockHistoryDialog inStockHistoryDialog = new InStockHistoryDialog();
+            inStockHistoryDialog.showDialog(requireContext(), selectedItems);
+        });
     }
-
 
     private void unlockFields(boolean f) {
         focus(contacts, f);

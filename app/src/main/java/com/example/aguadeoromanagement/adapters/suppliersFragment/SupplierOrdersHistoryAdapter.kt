@@ -16,6 +16,7 @@ import com.example.aguadeoromanagement.databinding.LineSupplierOrdersHistoryBind
 import com.example.aguadeoromanagement.models.SupplierOrderMain
 import com.example.aguadeoromanagement.networking.APIFetcher
 import com.example.aguadeoromanagement.networking.getOrderIdFromSupplierOrderNumber
+import com.example.aguadeoromanagement.networking.getStockHistoryForOrders
 import kotlinx.coroutines.*
 
 class SupplierOrdersHistoryAdapter(
@@ -44,10 +45,18 @@ class SupplierOrdersHistoryAdapter(
         holder.binding.orderDeadline.text = supplierOrders[position].deadline
         holder.binding.orderStatus.text = supplierOrders[position].status
 
+        if (supplierOrders[position].isSelected) {
+            holder.binding.root.setBackgroundColor(
+                ContextCompat.getColor(activity, R.color.highlightColor)
+            )
+        } else {
+            holder.binding.root.setBackgroundColor(
+                ContextCompat.getColor(activity, R.color.white)
+            )
+        }
+
         holder.binding.root.setOnClickListener {
-//            Log.e("bien", supplierOrders[position].supplierOrderNumber)
-
-
+            //Log.e("bien", supplierOrders[position].supplierOrderNumber)
             CoroutineScope(Dispatchers.Default).launch {
                 val id = getOrderIdFromSupplierOrderNumber(soNumber)
                 withContext(Dispatchers.Main){
@@ -60,5 +69,17 @@ class SupplierOrdersHistoryAdapter(
                 }
             }
         }
+        holder.binding.root.setOnLongClickListener{
+            // Toggle selection state
+            supplierOrders[position].isSelected = !supplierOrders[position].isSelected
+            // Notify adapter to refresh this item
+            notifyItemChanged(position)
+            // Return true to indicate the long click was handled
+            true
+        }
+    }
+
+    fun getSelectedItems(): List<SupplierOrderMain> {
+        return supplierOrders.filter { it.isSelected }
     }
 }

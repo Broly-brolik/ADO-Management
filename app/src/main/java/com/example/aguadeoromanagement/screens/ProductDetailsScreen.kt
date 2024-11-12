@@ -47,7 +47,6 @@ fun ProductDetailsScreen(
         )
 
         Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()) {
-            // Check if an inventory item is selected
             if (inventory != null) {
                 val locationId = inventory.idLocation.toIntOrNull() ?: 0
                 ProductDetails(

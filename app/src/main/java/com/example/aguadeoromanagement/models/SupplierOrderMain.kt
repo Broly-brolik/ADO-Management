@@ -19,5 +19,6 @@ data class SupplierOrderMain(
     val approval: String,
     val editable: Boolean,
     var orderNumber: String = "",
+    var isSelected: Boolean = false,
 
     ) : Parcelable
