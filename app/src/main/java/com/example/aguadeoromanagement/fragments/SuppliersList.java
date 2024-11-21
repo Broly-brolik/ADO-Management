@@ -99,6 +99,9 @@ public class SuppliersList extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+
+
+
         return binding.getRoot();
     }
 }

@@ -15,19 +15,33 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/containerSelectedItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp" />
+
+        <!--<TextView
             android:id="@+id/textViewSelectedItems"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Selected Items:"
+            android:text="Selected Orders:"
             android:textColor="@android:color/black"
-            android:padding="8dp"/>
+            android:padding="8dp"/>-->
 
         <EditText
-            android:id="@+id/editTextProductType"
+            android:id="@+id/editTextProductId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Product Type"
+            android:hint="Product ID"
+            android:visibility="gone"/>
+
+        <EditText
+            android:id="@+id/editTextDetail1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Detail"
             android:visibility="gone"/>
 
         <EditText
@@ -42,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Quantity"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:visibility="gone"/>
 
         <EditText
@@ -54,10 +68,18 @@
             android:visibility="gone"/>
 
         <EditText
+            android:id="@+id/editTextRemark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Remark"
+            android:visibility="gone"/>
+
+        <EditText
             android:id="@+id/editTextProcess"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Process"
+            android:inputType="number"
             android:visibility="gone"/>
 
         <EditText
@@ -65,27 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Flow"
-            android:visibility="gone"/>
-
-        <EditText
-            android:id="@+id/editTextDetail1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Detail 1"
-            android:visibility="gone"/>
-
-        <EditText
-            android:id="@+id/editTextDetail2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Detail 2"
-            android:visibility="gone"/>
-
-        <EditText
-            android:id="@+id/editTextRemark"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Remark"
+            android:inputType="number"
             android:visibility="gone"/>
 
         <Button

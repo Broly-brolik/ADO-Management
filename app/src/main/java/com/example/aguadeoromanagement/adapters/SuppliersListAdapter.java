@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aguadeoromanagement.R;
+import com.example.aguadeoromanagement.dialogs.InStockHistoryDialog;
 import com.example.aguadeoromanagement.fragments.SuppliersListDirections;
 import com.example.aguadeoromanagement.fragments.SuppliersManagementDirections;
 import com.example.aguadeoromanagement.models.Contact;
@@ -92,7 +93,11 @@ public class SuppliersListAdapter extends RecyclerView.Adapter<SuppliersListAdap
             bundle.putInt("contact_id", contact.getId());
             bundle.putString("contact_name", contact.getName());
 //            NavDirections action = SuppliersListDirections.actionSuppliersListToSuppliersManagement();
+            String contactName = contact.getName();
 
+            //List<SupplierOrderMain> selectedItems = new ArrayList<>(); // Pass selected items if any
+            //InStockHistoryDialog dialog = new InStockHistoryDialog();
+            //dialog.showDialog(activity, selectedItems, contactName);
             Navigation.findNavController(view).navigate(R.id.action_suppliersList_to_suppliersManagement, bundle);
         }
 
