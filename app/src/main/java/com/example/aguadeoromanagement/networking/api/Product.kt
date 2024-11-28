@@ -113,5 +113,25 @@ suspend fun getProduct(inventoryCode: String):Inventory? {
         )
         return@withContext inv
     }
+}
 
+suspend fun searchProductById(productID: String): List<Product> {
+    return withContext(Dispatchers.IO){
+        val query = Query(
+            "select * from Products where ID = $productID"
+        )
+        val succes = query.execute(Constants.url)
+        val res = mutableListOf<Product>()
+        query.res.forEach{ map ->
+            res.add(
+                Product(
+                    productCode = map["ProductCode"]!!,
+                    category = map["Category"]!!,
+                    subCategory = map["Subcategory"]!!,
+                    type = map["Type"]!!,
+                )
+            )
+        }
+        return@withContext res
+    }
 }

@@ -6,54 +6,91 @@
 
 </androidx.constraintlayout.widget.constraintlayout>-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/containerSelectedItems"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="8dp" />
 
-        <!--<TextView
+        <TextView
             android:id="@+id/textViewSelectedItems"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Selected Orders:"
+            android:text="@string/selected_orders"
             android:textColor="@android:color/black"
-            android:padding="8dp"/>-->
+            android:padding="8dp"/>
 
-        <EditText
-            android:id="@+id/editTextProductId"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Product ID"
-            android:visibility="gone"/>
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/editTextDetail1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Detail"
-            android:visibility="gone"/>
+            <EditText
+                android:id="@+id/editTextProductId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/product_id"
+                android:visibility="gone"/>
 
-        <EditText
-            android:id="@+id/editTextType"
-            android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:src="@android:drawable/ic_menu_search"
+                app:layout_constraintStart_toEndOf="@+id/editTextProduct"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/TextViewCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/TextViewSubcategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/TextViewType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/TextViewProductCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/spinnerTextType"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Type"
             android:visibility="gone"/>
 
         <EditText
             android:id="@+id/editTextQuantity"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Quantity"
             android:inputType="numberDecimal"
@@ -61,10 +98,40 @@
 
         <EditText
             android:id="@+id/editTextCost"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Cost"
             android:inputType="numberDecimal"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/TextViewTotalCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerTextProcess"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Process"
+            android:inputType="number"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerFlow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Flow"
+            android:inputType="number"
+            android:visibility="gone"/>
+
+        <EditText
+            android:id="@+id/editTextDetail1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Detail"
             android:visibility="gone"/>
 
         <EditText
@@ -74,21 +141,21 @@
             android:hint="Remark"
             android:visibility="gone"/>
 
-        <EditText
-            android:id="@+id/editTextProcess"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textViewResume"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Process"
-            android:inputType="number"
-            android:visibility="gone"/>
+            android:text=""
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:padding="8dp"
+            android:visibility="gone" />
 
-        <EditText
-            android:id="@+id/editTextFlow"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/buttonVerify"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Flow"
-            android:inputType="number"
-            android:visibility="gone"/>
+            android:text="Verify" />
 
         <Button
             android:id="@+id/buttonSave"
@@ -97,4 +164,5 @@
             android:text="Save" />
 
     </LinearLayout>
+
 </ScrollView>

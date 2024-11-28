@@ -49,7 +49,7 @@ class Query(mQuery: String) {
             if (success == 1) {
                 if (mQuery.startsWith("select") || mQuery.startsWith("SELECT")) {
                     Log.d("aaa", json.toString())
-                    val users = json?.getJSONArray("result")
+                    val users = json?.getJSONArray("result") // ici key result has no value
                     // looping through All Objects
                     if (users != null) {
                         for (i in 0 until users.length()) {

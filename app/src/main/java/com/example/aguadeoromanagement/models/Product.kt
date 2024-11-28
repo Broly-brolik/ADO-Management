@@ -5,5 +5,7 @@ data class Product(
     var productCode: String = "",
     var description: String = "",
     var unit: String = "",
-    var category: String = ""
+    var category: String = "",
+    var subCategory: String = "",
+    var type: String = ""
 )
