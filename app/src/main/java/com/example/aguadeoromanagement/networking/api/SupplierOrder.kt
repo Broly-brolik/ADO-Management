@@ -2,6 +2,8 @@ package com.example.aguadeoromanagement.networking.api
 
 import android.util.Log
 import com.example.aguadeoromanagement.Constants
+import com.example.aguadeoromanagement.models.Product
+import com.example.aguadeoromanagement.models.StockHistory
 import com.example.aguadeoromanagement.models.SupplierOrderMain
 import com.example.aguadeoromanagement.networking.Query
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +43,32 @@ suspend fun getSupplierOrderMainHistoryForNumbers(
             )
         }
 
+        return@withContext res
+    }
+}
+
+suspend fun getOrderComponentBySupplier(orderComponent: String): List<StockHistory>{
+    return withContext(Dispatchers.IO){
+        val orderComponentString: String = orderComponent.substringBeforeLast("_")
+        val q =
+            Query("select * FROM StockHistory1 WHERE OrderNumber LIKE '%$orderComponentString%'")
+        val succes = q.execute(Constants.url)
+        val res = mutableListOf<StockHistory>()
+        q.res.forEach{ map ->
+            res.add(
+                StockHistory(
+                    supplierOrderNumber = map["SupplierOrderMainID"]!!,
+                    orderNumber = map["OrderNumber"]!!,
+                    historicDate = map["HistoricDate"]!!,
+                    productId = map["ProductID"]!!.toInt(),
+                    supplier = map["Supplier"]!!,
+                    type = map["Type"]!!.toInt(),
+                    quantity = map["Quantity"]!!.toDouble(),
+                    cost = map["Cost"]?.toDoubleOrNull() ?: 0.0,
+                    flow = map["Flow"]!!,
+                )
+            )
+        }
         return@withContext res
     }
 }

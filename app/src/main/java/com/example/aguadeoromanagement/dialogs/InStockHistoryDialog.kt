@@ -2,42 +2,52 @@ package com.example.aguadeoromanagement.dialogs
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
+import android.widget.TableLayout
+import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.example.aguadeoromanagement.Constants
 import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.models.*
 import com.example.aguadeoromanagement.networking.Query
+import com.example.aguadeoromanagement.networking.api.getOrderComponentBySupplier
 import com.example.aguadeoromanagement.networking.api.searchProductById
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 
 class InStockHistoryDialog (context: Activity? = null) {
-    private val url = "http://195.15.223.234/aguadeoro/connect.php"
 
     fun showDialog(context: Context, selectedItems: List<SupplierOrderMain>) {
         val inflater = LayoutInflater.from(context)
         val dialogView = inflater.inflate(R.layout.dialog_add_item_stockhistory, null)
         val container: LinearLayout = dialogView.findViewById(R.id.containerSelectedItems)
+        val containerStockHistory: TableLayout = dialogView.findViewById(R.id.containerStockHistory)
         val selectedItemsTextView: TextView = dialogView.findViewById(R.id.textViewSelectedItems)
+        val buttonNewIn: Button = dialogView.findViewById(R.id.buttonNewIn)
+        val buttonOut: Button = dialogView.findViewById(R.id.buttonOut)
         var editTextProductId: EditText = dialogView.findViewById(R.id.editTextProductId)
         var textViewCategory: TextView = dialogView.findViewById(R.id.TextViewCategory)
         var textViewSubcategory: TextView = dialogView.findViewById(R.id.TextViewSubcategory)
@@ -77,9 +87,15 @@ class InStockHistoryDialog (context: Activity? = null) {
         val buttonVerify: Button = dialogView.findViewById(R.id.buttonVerify)
         val buttonSave: Button = dialogView.findViewById(R.id.buttonSave)
         var selectedOrder: String? = null
+        var stockHistoryList = listOf<StockHistory>()
 
         setupDynamicTotal(editTextQuantity, editTextCost, textViewTotal)
 
+        buttonNewIn.setOnClickListener{
+            toggleFieldVisibility(listOf(editTextProductId, imageViewSearch, textViewCategory, textViewSubcategory,
+                textViewType, textViewProductCode, typeSpinner, editTextQuantity, editTextCost, textViewTotal, editTextDetail1, editTextRemark, processSpinner, flowSpinner))
+            buttonVerify.visibility = View.VISIBLE
+        }
         selectedItems.forEach { order ->
             val textView = TextView(context).apply {
                 text = order.supplierOrderNumber
@@ -87,13 +103,26 @@ class InStockHistoryDialog (context: Activity? = null) {
                 setPadding(8, 8, 8, 8)
                 setTextColor(context.getColor(android.R.color.black))
                 setOnClickListener {
-                    toggleFieldVisibility(listOf(editTextProductId, imageViewSearch, textViewCategory, textViewSubcategory,
-                        textViewType, textViewProductCode, typeSpinner, editTextQuantity, editTextCost, textViewTotal, editTextDetail1, editTextRemark, processSpinner, flowSpinner))
                     selectedOrder = order.supplierOrderNumber
                     selectedItemsTextView.text = selectedOrder
+                    selectedItemsTextView.setTextColor(Color.BLUE)
+                    buttonOut.visibility = View.VISIBLE
+                    CoroutineScope(Dispatchers.Main).launch {
+                        stockHistoryList = getOrderComponentBySupplier(selectedOrder!!)
+                        val sortedStockHistoryList = stockHistoryList.sortedByDescending { it.historicDate }
+                        stockHistoryList = displayStockHistory(containerStockHistory, sortedStockHistoryList)
+                        if (textViewProductCode.visibility == View.VISIBLE){
+                            toggleFieldVisibility(listOf(editTextProductId, editTextDetail1, typeSpinner, editTextQuantity, editTextCost, editTextRemark, processSpinner, flowSpinner))
+                        }
+                    }
                 }
             }
             container.addView(textView)
+        }
+
+        buttonOut.setOnClickListener{
+            inverseInForOut(context, stockHistoryList)
+            containerStockHistory.removeAllViews()
         }
 
         imageViewSearch.setOnClickListener {
@@ -115,6 +144,7 @@ class InStockHistoryDialog (context: Activity? = null) {
         buttonVerify.setOnClickListener{
             val details = StringBuilder()
             if (textViewProductCode.visibility == View.VISIBLE) {
+                //editTextProductId.setTextColor(Color.BLUE)
                 val productId = editTextProductId.text.toString().trim()
                 details.append("Product ID: $productId; ")
                 val category = textViewCategory.text.toString()
@@ -142,6 +172,7 @@ class InStockHistoryDialog (context: Activity? = null) {
             }
             textViewResume.text = details.toString()
             textViewResume.visibility = View.VISIBLE
+            buttonSave.visibility = View.VISIBLE
         }
 
         buttonSave.setOnClickListener {
@@ -183,11 +214,18 @@ class InStockHistoryDialog (context: Activity? = null) {
                 }
             }
             clearForm(dialogView as ViewGroup)
-            toggleFieldVisibility(listOf(editTextProductId, editTextDetail1, typeSpinner, editTextQuantity, editTextCost, editTextRemark, processSpinner, flowSpinner))
+            toggleFieldVisibility(listOf(editTextProductId, editTextDetail1, imageViewSearch, textViewTotal, typeSpinner, editTextQuantity, editTextCost, editTextRemark, processSpinner, flowSpinner))
+            textViewResume.text = ""
+            textViewCategory.text = ""
+            textViewSubcategory.text = ""
+            textViewType.text = ""
+            textViewProductCode.text = ""
+            buttonVerify.visibility = View.GONE
+            buttonSave.visibility = View.GONE
         }
 
         AlertDialog.Builder(context)
-            .setTitle("Stock Historic IN/OUT")
+            .setTitle("Stock History variations")
             .setView(dialogView)
             .setPositiveButton("Close") { dialog, _ -> dialog.dismiss() }
             .show()
@@ -219,22 +257,21 @@ class InStockHistoryDialog (context: Activity? = null) {
         flow: Int,
     ) {
         val dateTime = DateTimeFormatter
-            .ofPattern("dd/MM/yyyy h:mm:ss a")
-            .withZone(ZoneOffset.UTC)
+            .ofPattern("yyyy/MM/dd HH:mm:ss")
+            .withZone(ZoneOffset.ofHours(1))
             .format(Instant.now())
 
         val query = """
     INSERT INTO StockHistory1 (
         SupplierOrderMainID, OrderNumber, HistoricDate, ProductID, Supplier, Detail, Type, Quantity, Cost, Remark, Weight, Loss, Process, Flow, SettlementStatus
     ) VALUES (
-        $supplierOrderMainID, '$supplierOrderNumber', #$dateTime#, $productID, '$recipient', '$detail', $type, $quantity, $cost, '$remark', $weight, $loss, '$process', $flow, 'Unverified'
+        $supplierOrderMainID, '$supplierOrderNumber', '$dateTime', $productID, '$recipient', '$detail', $type, $quantity, $cost, '$remark', $weight, $loss, '$process', $flow, 'Unverified'
     )
 """.trimIndent()
         try {
             val q = Query(query)
             withContext(Dispatchers.IO) {
-                q.execute(url)
-                Log.e("InStockHistoryDialog", "Record successfully inserted into StockHistory.")
+                q.execute(Constants.url)
             }
         } catch (e: Exception) {
             Log.e("InStockHistoryDialog", "Error inserting into StockHistory", e)
@@ -274,5 +311,109 @@ class InStockHistoryDialog (context: Activity? = null) {
         editTextCost.addTextChangedListener(textWatcher)
     }
 
+    private fun displayStockHistory(container: TableLayout, stockHistoryList: List<StockHistory>): List<StockHistory> {
+        container.removeAllViews()
+        val checkedStockHistoryList = mutableListOf<StockHistory>()
 
+        val tableLayout = TableLayout(container.context).apply {
+            layoutParams = TableLayout.LayoutParams(
+                TableLayout.LayoutParams.MATCH_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        val headerRow = TableRow(container.context).apply {
+            layoutParams = TableLayout.LayoutParams(
+                TableLayout.LayoutParams.MATCH_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        val headers = listOf("Date", "Product ID", "Supplier", "Type", "Quantity", "Costs", "Flow")
+        headers.forEach { headerText ->
+            val headerTextView = TextView(container.context).apply {
+                text = headerText
+                textSize = 20f
+                setTextColor(container.context.getColor(android.R.color.black))
+                setPadding(8, 8, 8, 8)
+                gravity = Gravity.CENTER
+            }
+            headerRow.addView(headerTextView)
+        }
+        tableLayout.addView(headerRow)
+
+        stockHistoryList.forEach { stockHistory ->
+            val row = TableRow(container.context).apply {
+                layoutParams = TableLayout.LayoutParams(
+                    TableLayout.LayoutParams.MATCH_PARENT,
+                    TableLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
+            val values = listOf(
+                stockHistory.historicDate,
+                stockHistory.productId.toString(),
+                stockHistory.supplier,
+                stockHistory.type.toString(),
+                stockHistory.quantity.toString(),
+                stockHistory.cost.toString(),
+                stockHistory.flow
+            )
+            values.forEach { value ->
+                val cellTextView = TextView(container.context).apply {
+                    text = value
+                    textSize = 14f
+                    setTextColor(container.context.getColor(android.R.color.black))
+                    setPadding(8, 8, 8, 8)
+                    gravity = Gravity.CENTER
+                }
+                row.addView(cellTextView)
+            }
+            val checkBox = CheckBox(container.context).apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked){
+                        if (!checkedStockHistoryList.contains(stockHistory)){
+                            checkedStockHistoryList.add(stockHistory)
+                        } else{
+                            checkedStockHistoryList.remove(stockHistory)
+                        }
+                    }
+                }
+            }
+            row.addView(checkBox)
+            tableLayout.addView(row)
+        }
+        container.addView(tableLayout)
+        return checkedStockHistoryList
+    }
+
+    private fun inverseInForOut(
+        context: Context,
+        checkedStockHistoryList: List<StockHistory>,
+    ) {
+        if (checkedStockHistoryList.any { it.type == 2 }) {
+            Toast.makeText(context, "Incorrect type selected: 2", Toast.LENGTH_SHORT).show()
+        } else {
+            checkedStockHistoryList.forEach { item ->
+                Log.e("zzz", "checkedItems: $checkedStockHistoryList")
+                CoroutineScope(Dispatchers.IO).launch {
+                    insertIntoStockHistory(context, item)
+                }
+            }
+        }
+    }
+
+
+    private suspend fun insertIntoStockHistory(context: Context, stockHistory: StockHistory) {
+        val query = """
+    INSERT INTO StockHistory1 (SupplierOrderMainID, OrderNumber, HistoricDate, ProductID, Supplier, Type, Quantity, Flow, Detail, Remark, SettlementStatus) 
+    VALUES ('${stockHistory.supplierOrderNumber}', '${stockHistory.orderNumber}', '${stockHistory.historicDate}', ${stockHistory.productId}, '${stockHistory.supplier}', ${stockHistory.type}, ${stockHistory.quantity}, ${stockHistory.flow}, 'TEST', 'TEST', 'Unverified')
+    """
+        try {
+            withContext(Dispatchers.IO) {
+                Query(query).execute(Constants.url)
+            }
+        } catch (e: Exception) {
+            Log.e("zzz", "Error inserting record: $stockHistory", e)
+        }
+    }
 }
+
+// dateuntil calendar, order date by descending, verify format date for ins and out

@@ -17,6 +17,25 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonNewIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New IN"/>
+
+            <Button
+                android:id="@+id/buttonOut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OUT"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/containerSelectedItems"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,6 +49,13 @@
             android:text="@string/selected_orders"
             android:textColor="@android:color/black"
             android:padding="8dp"/>
+
+        <TableLayout
+            android:id="@+id/containerStockHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="4dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -85,7 +111,6 @@
             android:id="@+id/spinnerTextType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Type"
             android:visibility="gone"/>
 
         <EditText
@@ -155,13 +180,15 @@
             android:id="@+id/buttonVerify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Verify" />
+            android:text="Verify IN"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/buttonSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save" />
+            android:text="Save new IN"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

@@ -7,9 +7,8 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="ins_outs">IN/OUT</string>
-    <string name="selected_orders">Selected Orders:</string>
+    <string name="ins_outs">StockHistory variations</string>
+    <string name="selected_orders">""</string>
     <string name="product_id">Product ID</string>
     <string-array name="type_array">
         <item>1</item>

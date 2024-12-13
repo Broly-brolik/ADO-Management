@@ -85,18 +85,13 @@ fun InvoiceListScreen(
         }, selectedDate.year, selectedDate.monthValue - 1, selectedDate.dayOfMonth
     )
     datePicker.setMessage("Select Payment Date")
-
     datePicker.setOnDateSetListener { datePicker, i, i2, i3 ->
-
         val newDate = LocalDate.of(i, i2 + 1, i3)
         updateDate(daysBeforeNow, newDate)
 //                    selectedDateText = payDate.format(Constants.forUsFormatter)
-
     }
 
-
     var daysList = (0..30).toList()
-
 
     fun onInvoiceClick(invoice: Invoice) {
         selectedInvoice = invoice
@@ -500,8 +495,8 @@ fun StockForFlow(
         stock.keys.toList().forEach {
             val stocks = stock[it]!!
             val stockForFlow =
-                stocks.filter { s -> s.flow.isNotEmpty() }
-                    .filter { s -> s.flow.toInt() in flows && ((s.type == 1 && is_in) || (s.type != 1 && !is_in)) }
+                stocks.filter { s -> s.flow!!.isNotEmpty() }
+                    .filter { s -> s.flow?.toInt() in flows && ((s.type == 1 && is_in) || (s.type != 1 && !is_in)) }
             val sum = stockForFlow.fold(0.0) { acc, stock -> acc + stock.quantity }
             val amount = stockForFlow.fold(0.0) { acc, stock -> acc + stock.cost * stock.quantity }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -828,7 +823,7 @@ fun InOutContainer(inOutList: List<StockHistory>, loadingItems: Boolean, modifie
 //                    paymentInfo.add(item.supplier)
                     inOutInfo.add(item.quantity.toString())
                     inOutInfo.add(type)
-                    inOutInfo.add(item.flow)
+                    item.flow?.let { inOutInfo.add(it) }
                     inOutInfo.add(item.process)
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(inOutInfo.size),

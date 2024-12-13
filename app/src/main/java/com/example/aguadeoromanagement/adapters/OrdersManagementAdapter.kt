@@ -166,11 +166,11 @@ class OrdersManagementAdapter(
                     if (line.type == 2) {
                         outCount += line.quantity
                     } else {
-                        if (line.flow.lowercase() == "returned") {
+                        if (line.flow?.lowercase() == "returned") {
                             returnedCount += line.quantity
-                        } else if (line.flow.lowercase() == "finished") {
+                        } else if (line.flow?.lowercase() == "finished") {
                             finishedCount += line.quantity
-                        } else if (line.flow.lowercase() == "variance") {
+                        } else if (line.flow?.lowercase() == "variance") {
                             varianceCount += line.quantity
                         }
                     }

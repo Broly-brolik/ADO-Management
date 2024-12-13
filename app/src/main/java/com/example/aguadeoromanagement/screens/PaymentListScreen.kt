@@ -47,6 +47,8 @@ fun PaymentsListScreen(
     suppliers: List<Contact>,
     showPopup: Boolean,
     dismissPopup: () -> Unit,
+    //updateDate: (Int, LocalDate) -> Unit,
+    //selectedDate: LocalDate,
     navigateToInvoice: (String, String) -> Unit,
     updateInvoiceItems: (Int, Double, Double)-> Unit
 ) {
@@ -94,7 +96,18 @@ fun PaymentsListScreen(
             "Checked by",
             "Executed ?"
         )
-
+    val context = LocalContext.current
+    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+    val datePicker = DatePickerDialog(
+        context,
+        { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
+        }, selectedDate.year, selectedDate.monthValue - 1, selectedDate.dayOfMonth
+    )
+    datePicker.setMessage("Select Payment Date")
+    datePicker.setOnDateSetListener { datePicker, i, i2, i3 ->
+        val newDate = LocalDate.of(i, i2 + 1, i3)
+        //updateDate(daysBeforeNow, newDate)
+    }
 
     fun update() {
         scope.launch {
@@ -140,7 +153,8 @@ fun PaymentsListScreen(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 modifier = Modifier.width(75.dp)
             )
-            Text("days until ${LocalDate.now().format(Constants.forUsFormatter)}")
+            Text("days until ${LocalDate.now().format(Constants.forUsFormatter)}",
+                Modifier.clickable { datePicker.show() })
 
             Button(onClick = {
                 update()
@@ -489,12 +503,9 @@ fun PaymentsListScreen(
                             }, year, month, dayOfMonth
                         )
                         datePicker.setMessage("Select Payment Date")
-
                         datePicker.setOnDateSetListener { datePicker, i, i2, i3 ->
-
                             val payDate = LocalDate.of(i, i2 + 1, i3)
                             selectedDateText = payDate.format(Constants.forUsFormatter)
-
                         }
 
                         Row(

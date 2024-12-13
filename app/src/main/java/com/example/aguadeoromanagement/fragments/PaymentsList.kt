@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import com.example.aguadeoromanagement.ManagementApplication
 import com.example.aguadeoromanagement.viewmodels.InvoiceHistoryViewModel
 import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.screens.PaymentsListScreen
@@ -107,12 +109,12 @@ class PaymentsList : Fragment() {
                                 viewModel.updatePaymentItem(invoiceID, totalPrice, paidPrice)
                             }
                         }
+
                     )
 //                Text("hello world")
                 }
             }
         }
     }
-
 
 }
