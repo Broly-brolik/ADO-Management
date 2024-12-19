@@ -48,7 +48,8 @@ fun ProductDetailsScreen(
 
         Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()) {
             if (inventory != null) {
-                val locationId = inventory.idLocation.toIntOrNull() ?: 0
+                val locationId = inventory.idLocation.toIntOrNull() ?: 0 // deja faux 65
+                Log.e("zzz", "inventory.location $locationId")
                 ProductDetails(
                     inventory = inventory,
                     productHistory = productHistory,

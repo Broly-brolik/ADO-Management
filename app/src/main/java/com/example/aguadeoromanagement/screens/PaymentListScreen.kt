@@ -47,10 +47,10 @@ fun PaymentsListScreen(
     suppliers: List<Contact>,
     showPopup: Boolean,
     dismissPopup: () -> Unit,
+    navigateToInvoice: (String, String) -> Unit,
+    updateInvoiceItems: (Int, Double, Double)-> Unit,
     //updateDate: (Int, LocalDate) -> Unit,
     //selectedDate: LocalDate,
-    navigateToInvoice: (String, String) -> Unit,
-    updateInvoiceItems: (Int, Double, Double)-> Unit
 ) {
 
     val toExecute = remember { mutableStateListOf<Int>() }
@@ -59,6 +59,7 @@ fun PaymentsListScreen(
     var daysBeforeNow by remember {
         mutableStateOf(6)
     }
+
     var updating by remember {
         mutableStateOf(false)
     }
@@ -96,8 +97,11 @@ fun PaymentsListScreen(
             "Checked by",
             "Executed ?"
         )
-    val context = LocalContext.current
-    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+    /*val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+    val year = calendar[Calendar.YEAR]
+    val month = calendar[Calendar.MONTH]
+    val dayOfMonth = calendar[Calendar.DAY_OF_MONTH]
     val datePicker = DatePickerDialog(
         context,
         { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
@@ -106,8 +110,10 @@ fun PaymentsListScreen(
     datePicker.setMessage("Select Payment Date")
     datePicker.setOnDateSetListener { datePicker, i, i2, i3 ->
         val newDate = LocalDate.of(i, i2 + 1, i3)
-        //updateDate(daysBeforeNow, newDate)
-    }
+        scope.launch {
+            updatePayment(daysBeforeNow, includeFuture)
+        }
+    }*/
 
     fun update() {
         scope.launch {
@@ -124,9 +130,7 @@ fun PaymentsListScreen(
             return false
         }
         if (specificSupplierIndex > 0) {
-
             val name = suppliersWithAll[specificSupplierIndex]
-
             return name == payment.contactName
         }
         return true
@@ -153,9 +157,8 @@ fun PaymentsListScreen(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 modifier = Modifier.width(75.dp)
             )
-            Text("days until ${LocalDate.now().format(Constants.forUsFormatter)}",
-                Modifier.clickable { datePicker.show() })
-
+            Text("days until ${LocalDate.now().format(Constants.forUsFormatter)}",)
+                //Modifier.clickable { datePicker.show() })
             Button(onClick = {
                 update()
             }) {
@@ -453,8 +456,6 @@ fun PaymentsListScreen(
                         //pour rafraichir le ui
                         updatePayment(daysBeforeNow, includeFuture)
                     }
-
-
                 }
             }
 

@@ -74,10 +74,6 @@ fun InvoiceListScreen(
         mutableStateOf(Details.NONE)
     }
     val context = LocalContext.current
-//    val calendar = Calendar.getInstance()
-//    val year = calendar[Calendar.YEAR]
-//    val month = calendar[Calendar.MONTH]
-//    val dayOfMonth = calendar[Calendar.DAY_OF_MONTH]
     val datePicker = DatePickerDialog(
         context,
         { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
@@ -125,13 +121,9 @@ fun InvoiceListScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Days before today (${
+                    "Days before ${
                         selectedDate.format(Constants.forUsFormatter)
-                    })", Modifier.clickable { datePicker.show() })
-
-
-//                var selectedDateText by remember { mutableStateOf("") }
-
+                    }", Modifier.clickable { datePicker.show() })
 
                 Spinner(
                     daysList.map { it.toString() },
@@ -160,10 +152,7 @@ fun InvoiceListScreen(
             navigateToDetails = navigateToDetails,
             modifier = Modifier.weight(1f)
         )
-
         val defaultButton = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
-
-
         if (details != Details.NONE) {
             Row(
                 Modifier
@@ -355,7 +344,6 @@ fun invoicesContainer(
 
     }
 }
-
 
 @Composable
 fun itemsContainer(

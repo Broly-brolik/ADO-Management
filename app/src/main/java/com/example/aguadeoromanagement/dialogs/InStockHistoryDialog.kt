@@ -33,7 +33,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
@@ -265,7 +264,7 @@ class InStockHistoryDialog (context: Activity? = null) {
     INSERT INTO StockHistory1 (
         SupplierOrderMainID, OrderNumber, HistoricDate, ProductID, Supplier, Detail, Type, Quantity, Cost, Remark, Weight, Loss, Process, Flow, SettlementStatus
     ) VALUES (
-        $supplierOrderMainID, '$supplierOrderNumber', '$dateTime', $productID, '$recipient', '$detail', $type, $quantity, $cost, '$remark', $weight, $loss, '$process', $flow, 'Unverified'
+        $supplierOrderMainID, '$supplierOrderNumber', #$dateTime#, $productID, '$recipient', '$detail', $type, $quantity, $cost, '$remark', $weight, $loss, '$process', $flow, 'Unverified'
     )
 """.trimIndent()
         try {
@@ -347,11 +346,16 @@ class InStockHistoryDialog (context: Activity? = null) {
                     TableLayout.LayoutParams.WRAP_CONTENT
                 )
             }
+            val stockHistoryType = when (stockHistory.type){
+                1 -> "IN"
+                2 -> "OUT"
+                else -> "N/A"
+            }
             val values = listOf(
                 stockHistory.historicDate,
                 stockHistory.productId.toString(),
                 stockHistory.supplier,
-                stockHistory.type.toString(),
+                stockHistoryType,
                 stockHistory.quantity.toString(),
                 stockHistory.cost.toString(),
                 stockHistory.flow
@@ -389,10 +393,9 @@ class InStockHistoryDialog (context: Activity? = null) {
         checkedStockHistoryList: List<StockHistory>,
     ) {
         if (checkedStockHistoryList.any { it.type == 2 }) {
-            Toast.makeText(context, "Incorrect type selected: 2", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Incorrect type selected: OUT", Toast.LENGTH_SHORT).show()
         } else {
             checkedStockHistoryList.forEach { item ->
-                Log.e("zzz", "checkedItems: $checkedStockHistoryList")
                 CoroutineScope(Dispatchers.IO).launch {
                     insertIntoStockHistory(context, item)
                 }
@@ -400,11 +403,10 @@ class InStockHistoryDialog (context: Activity? = null) {
         }
     }
 
-
     private suspend fun insertIntoStockHistory(context: Context, stockHistory: StockHistory) {
         val query = """
     INSERT INTO StockHistory1 (SupplierOrderMainID, OrderNumber, HistoricDate, ProductID, Supplier, Type, Quantity, Flow, Detail, Remark, SettlementStatus) 
-    VALUES ('${stockHistory.supplierOrderNumber}', '${stockHistory.orderNumber}', '${stockHistory.historicDate}', ${stockHistory.productId}, '${stockHistory.supplier}', ${stockHistory.type}, ${stockHistory.quantity}, ${stockHistory.flow}, 'TEST', 'TEST', 'Unverified')
+    VALUES ('${stockHistory.supplierOrderNumber}', '${stockHistory.orderNumber}', #${stockHistory.historicDate}#, ${stockHistory.productId}, '${stockHistory.supplier}', ${stockHistory.type}, ${stockHistory.quantity}, ${stockHistory.flow}, 'TEST', 'TEST', 'Unverified')
     """
         try {
             withContext(Dispatchers.IO) {

@@ -28,6 +28,7 @@ suspend fun getInventoryWithoutLocation(): List<Inventory> {
                 rfidTag = map["rfidTag"]!!,
                 idLocation = map["IDLocation"]!!
             )
+            Log.e("zzz", "inv : $inv")
             res.add(inv)
         }
         return@withContext res.distinctBy { it.inventoryCode }
