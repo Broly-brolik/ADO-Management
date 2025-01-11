@@ -1,6 +1,7 @@
 package com.example.aguadeoromanagement.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,8 @@ import com.example.aguadeoromanagement.models.OptionValue
 import com.example.aguadeoromanagement.models.Payment
 import com.example.aguadeoromanagement.networking.Query
 import com.example.aguadeoromanagement.networking.api.getPayments
+import com.example.aguadeoromanagement.networking.getInvoicesWithFilter
+import com.example.aguadeoromanagement.networking.getPaymentsListWithFilter
 import com.example.aguadeoromanagement.networking.getSuppliers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +26,8 @@ class InvoiceHistoryViewModel : ViewModel() {
     val paymentsList = mutableStateOf(emptyList<Payment>())
     val optionValues = mutableStateOf(emptyList<OptionValue>())
     val suppliers = mutableStateOf(emptyList<Contact>())
+    val selectedDate = mutableStateOf(LocalDate.now())
+    var daysBeforeNow = mutableIntStateOf(6)
 
     init {
         viewModelScope.launch {
@@ -40,6 +45,14 @@ class InvoiceHistoryViewModel : ViewModel() {
             optionValues.value = getOptionValues()
         }
 
+    }
+
+    fun updateDate(newDay: Int, newDate: LocalDate) {
+        viewModelScope.launch {
+            daysBeforeNow.value = newDay
+            selectedDate.value = newDate
+            paymentsList.value = getPaymentsListWithFilter("", daysBeforeNow.value, selectedDate.value)
+        }
     }
 
     private suspend fun getOptionValues(): List<OptionValue> {

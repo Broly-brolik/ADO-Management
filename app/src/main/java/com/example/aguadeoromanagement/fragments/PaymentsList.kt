@@ -98,7 +98,9 @@ class PaymentsList : Fragment() {
                             GlobalScope.launch {
                                 viewModel.updatePaymentItem(invoiceID, totalPrice, paidPrice)
                             }
-                        }
+                        },
+                        selectedDate = viewModel.selectedDate.value,
+                        updateDate = { newDays, newDate -> viewModel.updateDate(newDays, newDate) }
                     )
                 }
             }

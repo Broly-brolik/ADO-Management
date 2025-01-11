@@ -93,6 +93,54 @@ suspend fun getSupplierInvoices(
     }
 }
 
+suspend fun getPaymentsListWithFilter(
+    f: String = "",
+    daysBeforeNow: Int = 6,
+    selectedDate: LocalDate = LocalDate.now()
+): List<Payment> {
+    return withContext(Dispatchers.IO) {
+        var filter = f
+        if (filter.isEmpty()) {
+            val dayStop = selectedDate.format(Constants.accessFormater)
+            val dayStart = selectedDate.minusDays(daysBeforeNow.toLong()).format(Constants.accessFormater)
+            filter = "WHERE ScheduledDate <= #$dayStop# and ScheduledDate >= #$dayStart#"
+        }
+        filter += " AND IsPayment = True"
+        val q = Query("select Contacts.Contacts, InvoiceHistory.*, Invoice.InvNumber, Invoice.Curr, Invoice.Remain, Invoice.Amount FROM "
+                + "(InvoiceHistory INNER JOIN Invoice ON InvoiceHistory.InvoiceID = Invoice.ID) " + "INNER JOIN Contacts ON Contacts.ID = Invoice.Supplier "
+                + "$filter " + "ORDER BY ScheduledDate DESC")
+
+        val s = q.execute(Constants.url)
+        val res = mutableListOf<Payment>()
+        q.res.forEach { payment ->
+            res.add(
+                Payment(
+                    payment["ID"]!!.toInt(),
+                    payment["InvoiceID"]!!.toInt(),
+                    payment["AmountPaid"]?.toDoubleOrNull() ?: 0.0,
+                    scheduledDate = if (!payment["ScheduledDate"].isNullOrEmpty()) LocalDate.parse(
+                        payment["ScheduledDate"]!!, Constants.fromAccessFormatter
+                    ).format(Constants.forUsFormatter) else "",
+                    payment["PaymentBy"] ?: "",
+                    payment["Remarks"] ?: "",
+                    executed = payment["Executed"] == "1",
+                    executedDate = if (!payment["ExecutedDate"].isNullOrEmpty()) LocalDate.parse(
+                        payment["ExecutedDate"]!!, Constants.fromAccessFormatter
+                    ).format(Constants.forUsFormatter) else "",
+                    invoiceNumber = payment["InvNumber"] ?: "",
+                    contactName = payment["Contacts"] ?: "",
+                    currency = payment["Curr"] ?: "",
+                    paymentMode = payment["PaymentBy"] ?: "",
+                    checkedBy = payment["CheckedBy"] ?: "",
+                    remainingOfInvoice = payment["Remain"]?.toDoubleOrNull() ?: 0.0,
+                    totalOfInvoice = payment["Amount"]?.toDoubleOrNull() ?: 0.0,
+                )
+            )
+        }
+        return@withContext res.toList()
+    }
+}
+
 suspend fun getInvoicesWithFilter(
     f: String = "",
     daysBeforeNow: Int = 6,

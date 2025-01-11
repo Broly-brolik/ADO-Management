@@ -24,15 +24,17 @@ suspend fun getPayments(
 
 //"select Supplier.*, Contacts.ID as contactId from Contacts inner join Supplier on Contacts.SupplierID = Supplier.ID WHERE Contacts.ID = $id"
     var q = Query(
-        "select Contacts.Contacts, InvoiceHistory.*, Invoice.InvNumber, Invoice.Curr, Invoice.Remain, Invoice.Amount FROM " + "(InvoiceHistory INNER JOIN Invoice ON InvoiceHistory.InvoiceID = Invoice.ID) " + "INNER JOIN Contacts ON Contacts.ID = Invoice.Supplier " + "$whereClause " + "ORDER BY ScheduledDate DESC"
+        "select Contacts.Contacts, InvoiceHistory.*, Invoice.InvNumber, Invoice.Curr, Invoice.Remain, Invoice.Amount FROM "
+                + "(InvoiceHistory INNER JOIN Invoice ON InvoiceHistory.InvoiceID = Invoice.ID) " + "INNER JOIN Contacts ON Contacts.ID = Invoice.Supplier "
+                + "$whereClause " + "ORDER BY ScheduledDate DESC"
     )
 
     if (noContactName) {
         q = Query(
-            "select InvoiceHistory.*, Invoice.InvNumber, Invoice.Curr, Invoice.Remain, Invoice.Amount FROM " + "(InvoiceHistory INNER JOIN Invoice ON InvoiceHistory.InvoiceID = Invoice.ID) " + "$whereClause " + "ORDER BY ScheduledDate DESC"
+            "select InvoiceHistory.*, Invoice.InvNumber, Invoice.Curr, Invoice.Remain, Invoice.Amount FROM "
+                    + "(InvoiceHistory INNER JOIN Invoice ON InvoiceHistory.InvoiceID = Invoice.ID) " + "$whereClause " + "ORDER BY ScheduledDate DESC"
         )
     }
-
 //            WHERE PaymentDate >= #$dateLimit#
     val s = q.execute(Constants.url)
     val res = mutableListOf<Payment>()
