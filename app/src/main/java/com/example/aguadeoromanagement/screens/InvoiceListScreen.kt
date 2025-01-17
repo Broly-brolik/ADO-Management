@@ -62,9 +62,16 @@ fun InvoiceListScreen(
     daysBeforeNow: Int,
     updateDate: (Int, LocalDate) -> Unit,
     selectedDate: LocalDate,
-    navController: NavController
+    navController: NavController,
+
 
 ) {
+    /*var invoiceNumber: Invoice? by remember { mutableStateOf(invoices.invoiceNumber) }
+    var invoiceStatus by remember { mutableStateOf(invoices.status) }
+    var invoiceDate by remember { mutableStateOf(invoices.invoiceDate) }
+    var dueDate by remember { mutableStateOf(invoices.dueOn) }
+    var currency by remember { mutableStateOf(invoices.currency) }
+    var remark by remember { mutableStateOf(invoices.remark) }*/
 
     var selectedInvoice: Invoice? by remember {
         mutableStateOf(null)

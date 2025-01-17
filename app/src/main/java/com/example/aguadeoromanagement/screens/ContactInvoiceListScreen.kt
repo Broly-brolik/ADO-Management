@@ -45,8 +45,9 @@ fun ContactInvoiceListScreen(
     }
 
     fun onInvoiceClick(invoice: Invoice) {
-        selectedInvoice = invoice
-        fetchInvoiceItems(invoice)
+        //selectedInvoice = invoice
+        //fetchInvoiceItems(invoice)
+        navigateToDetails(invoice)
     }
 
     Column(

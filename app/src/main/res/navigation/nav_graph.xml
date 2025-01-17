@@ -147,6 +147,9 @@
             android:name="from_create_invoice"
             app:argType="boolean"
             android:defaultValue="false" />
+        <action
+            android:id="@+id/action_invoiceDetails_to_allInvoices"
+            app:destination="@id/allInvoices" />
     </fragment>
     <fragment
         android:id="@+id/paymentsList"
