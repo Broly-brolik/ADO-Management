@@ -7,5 +7,10 @@ data class Product(
     var unit: String = "",
     var category: String = "",
     var subCategory: String = "",
-    var type: String = ""
+    var type: String = "",
+    val entryDate: String = "",
+    val line: String = "",
+    val colorAdo: String = "",
+    val picture: String = "",
 )
+

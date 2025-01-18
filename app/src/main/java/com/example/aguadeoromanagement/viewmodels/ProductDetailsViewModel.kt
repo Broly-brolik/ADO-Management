@@ -34,7 +34,6 @@ class ProductDetailsViewModel(inventoryCode: String) : ViewModel() {
     var currentInventory = mutableStateOf<Inventory?>(null)
     var productHistory = mutableStateOf(emptyList<Map<String, String>>())
 
-
     init {
         viewModelScope.launch {
 //            updateProduct()
