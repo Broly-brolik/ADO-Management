@@ -152,5 +152,24 @@
             app:layout_constraintTop_toBottomOf="@+id/singleProductBtn"
             app:rippleColor="@color/colorPrimary" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/adoStonesBtn"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="64dp"
+            android:drawableTint="@color/white"
+            android:text="Ado Stones"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            app:iconGravity="start"
+            app:iconPadding="32dp"
+            app:iconSize="64dp"
+            app:layout_constraintEnd_toEndOf="@+id/statisticsBtn"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/statisticsBtn"
+            app:layout_constraintTop_toBottomOf="@+id/statisticsBtn"
+            app:rippleColor="@color/colorPrimary" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

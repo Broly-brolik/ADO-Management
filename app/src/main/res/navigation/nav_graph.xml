@@ -38,6 +38,10 @@
             android:id="@+id/action_HomeFragment_to_invoiceList"
             app:destination="@id/invoiceList" />
         <action
+            android:id="@+id/action_HomeFragment_to_adoStones"
+            app:destination="@id/adoStonesFragment"
+            />
+        <action
             android:id="@+id/action_HomeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
         <action
@@ -222,6 +226,11 @@
         <argument
             android:name="contactName"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/adoStonesFragment"
+        android:name="com.example.aguadeoromanagement.fragments.AdoStonesFragment"
+        android:label="AdoStonesFragment" >
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

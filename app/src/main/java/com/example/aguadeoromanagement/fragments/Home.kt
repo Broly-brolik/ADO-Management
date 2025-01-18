@@ -121,6 +121,11 @@ class Home : Fragment() {
             ).navigate(action)
         }
 
+        binding.adoStonesBtn.setOnClickListener {
+            val action = R.id.action_HomeFragment_to_adoStones
+            findNavController(requireView()).navigate(action)
+        }
+
         binding.statisticsBtn.setOnClickListener {
             findNavController(requireView()).navigate(R.id.action_HomeFragment_to_statisticsFragment)
         }

@@ -46,8 +46,6 @@ class InvoiceDetailsV2 : Fragment() {
 
     private val args by navArgs<InvoiceDetailsArgs>()
 
-
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_invoice_details, menu)
