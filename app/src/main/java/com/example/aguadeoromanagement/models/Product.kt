@@ -11,6 +11,7 @@ data class Product(
     val entryDate: String = "",
     val line: String = "",
     val colorAdo: String = "",
-    val picture: String = "",
+    val imageUrl: String = "",
+    val quantity: Double = 0.0,
 )
 
