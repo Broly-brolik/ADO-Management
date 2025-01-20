@@ -4,6 +4,8 @@ import android.app.Activity
 import android.util.Log
 import com.example.aguadeoromanagement.Constants
 import com.example.aguadeoromanagement.models.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -796,6 +798,5 @@ class APIFetcher(context: Activity? = null) {
         val success = q.execute(url)
         completion(success)
     }
-
 
 }

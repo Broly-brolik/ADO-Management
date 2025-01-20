@@ -104,4 +104,3 @@ fun ProductItem(product: Product) {
         }
     }
 }
-

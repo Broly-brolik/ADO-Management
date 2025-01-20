@@ -109,3 +109,31 @@ suspend fun getStockForSupplier(supplier:String, maxDays: Int = 30): List<StockH
         return@withContext res
     }
 }
+
+suspend fun getProductStockQuantity(productID: String): Map<Int, Double> {
+    return withContext(Dispatchers.IO) {
+        if (productID.isEmpty()) {
+            return@withContext emptyMap()
+        }
+
+        val query = Query(
+            "select sum(Quantity) as total, Type from StockHistory1 where ProductID=$productID group by Type"
+        )
+
+        val success = query.execute(Constants.url)
+        if (!success) {
+            return@withContext emptyMap()
+        }
+
+        val typeQuantities = mutableMapOf<Int, Double>()
+        query.res.forEach { map ->
+            val type = map["Type"]?.toIntOrNull()
+            val total = map["total"]?.toDoubleOrNull()
+            if (type != null && total != null) {
+                typeQuantities[type] = total
+            }
+        }
+
+        return@withContext typeQuantities
+    }
+}

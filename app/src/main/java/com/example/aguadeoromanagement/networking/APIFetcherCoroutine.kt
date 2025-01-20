@@ -413,32 +413,6 @@ suspend fun updateInvoiceItem(invoiceItem: InvoiceItem): Boolean {
     }
 }
 
-suspend fun getProductStockQuantity(productID: String): Map<Int, Double> {
-    return withContext(Dispatchers.IO) {
-        if (productID.isEmpty()) {
-            return@withContext emptyMap()
-        }
 
-        val query = Query(
-            "SELECT SUM(Quantity) as total, Type FROM StockHistory1 WHERE ProductID = $productID GROUP BY Type"
-        )
-
-        val success = query.execute(Constants.url)
-        if (!success) {
-            return@withContext emptyMap()
-        }
-
-        val typeQuantities = mutableMapOf<Int, Double>()
-        query.res.forEach { map ->
-            val type = map["Type"]?.toIntOrNull()
-            val total = map["total"]?.toDoubleOrNull()
-            if (type != null && total != null) {
-                typeQuantities[type] = total
-            }
-        }
-
-        return@withContext typeQuantities
-    }
-}
 
 
