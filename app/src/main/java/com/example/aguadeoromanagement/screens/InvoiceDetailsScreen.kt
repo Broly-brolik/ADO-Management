@@ -7,3 +7,4 @@ import androidx.compose.runtime.Composable
 fun InvoiceDetailsScreen() {
     Text("Invoice details")
 }
+

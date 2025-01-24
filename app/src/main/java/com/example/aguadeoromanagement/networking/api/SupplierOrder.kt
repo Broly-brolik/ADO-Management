@@ -19,7 +19,7 @@ suspend fun getSupplierOrderMainHistoryForNumbers(
             ids_string = ids_string.removeRange(ids_string.length - 2, ids_string.length)
         }
         val q =
-            Query("select * FROM SupplierOrderMain WHERE SupplierOrderNumber in (${ids_string})")
+            Query("select * from SupplierOrderMain where SupplierOrderNumber in (${ids_string})")
         val s = q.execute(Constants.url)
         val res = mutableListOf<SupplierOrderMain>()
         q.res.forEach { supplierOrderMain ->
@@ -51,7 +51,7 @@ suspend fun getOrderComponentBySupplier(orderComponent: String): List<StockHisto
     return withContext(Dispatchers.IO){
         val orderComponentString: String = orderComponent.substringBeforeLast("_")
         val q =
-            Query("select * FROM StockHistory1 WHERE OrderNumber LIKE '%$orderComponentString%'")
+            Query("select * FROM StockHistory1 WHERE OrderNumber like '%$orderComponentString%'")
         val succes = q.execute(Constants.url)
         val res = mutableListOf<StockHistory>()
         q.res.forEach{ map ->

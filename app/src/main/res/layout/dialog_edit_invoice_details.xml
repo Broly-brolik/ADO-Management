@@ -1,0 +1,49 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editInvoiceNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Invoice Number"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/editInvoiceDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Invoice Date"
+        android:inputType="date" />
+
+    <EditText
+        android:id="@+id/editCurrency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Currency"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/editDiscount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Discount (%)"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/editRemarks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Remarks"
+        android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_gravity="end" />
+</LinearLayout>

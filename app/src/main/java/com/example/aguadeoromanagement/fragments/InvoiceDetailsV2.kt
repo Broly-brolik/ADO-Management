@@ -54,6 +54,10 @@ class InvoiceDetailsV2 : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_edit_invoice_details -> {
+                //showEditInvoiceDialog()
+                true
+            }
             R.id.action_add_payment -> {
 //                Toast.makeText(requireContext(), "yo", Toast.LENGTH_SHORT).show()
 //                if (invoice.id > 0) {
@@ -122,4 +126,52 @@ class InvoiceDetailsV2 : Fragment() {
             }
         }
     }
+
+    /*private fun showEditInvoiceDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_invoice_details, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Edit Invoice Details")
+            .setView(dialogView)
+            .create()
+
+        val editInvoiceNumber = dialogView.findViewById<EditText>(R.id.editInvoiceNumber)
+        val editInvoiceDate = dialogView.findViewById<EditText>(R.id.editInvoiceDate)
+        val editCurrency = dialogView.findViewById<EditText>(R.id.editCurrency)
+        val editDiscount = dialogView.findViewById<EditText>(R.id.editDiscount)
+        val editRemarks = dialogView.findViewById<EditText>(R.id.editRemarks)
+        val saveButton = dialogView.findViewById<Button>(R.id.saveButton)
+
+        // Populate fields with existing data
+        editInvoiceNumber.setText(invoice.invoiceNumber)
+        editInvoiceDate.setText(invoice.createdDate)
+        editCurrency.setText(invoice.currency)
+        editDiscount.setText(invoice.discountPercentage.toString())
+        editRemarks.setText(invoice.remark)
+
+        // Handle Save button click
+        saveButton.setOnClickListener {
+            invoice.invoiceNumber = editInvoiceNumber.text.toString()
+            invoice.createdDate = editInvoiceDate.text.toString()
+            invoice.currency = editCurrency.text.toString()
+            invoice.discountPercentage = editDiscount.text.toString().toDoubleOrNull() ?: 0.0
+            invoice.remark = editRemarks.text.toString()
+
+            // Save changes to the backend or database
+            CoroutineScope(Dispatchers.IO).launch {
+                val success = saveInvoiceChanges(invoice)
+                withContext(Dispatchers.Main) {
+                    if (success) {
+                        Toast.makeText(requireContext(), "Invoice updated", Toast.LENGTH_SHORT).show()
+                        refresh() // Refresh UI
+                        dialog.dismiss()
+                    } else {
+                        Toast.makeText(requireContext(), "Error saving changes", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        dialog.show()
+    }*/
+
 }

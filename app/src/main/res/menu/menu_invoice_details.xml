@@ -18,6 +18,11 @@
         android:orderInCategory="100"
         android:title="Home"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_edit_invoice_details"
+        android:orderInCategory="100"
+        android:title="Edit invoice details"
+        app:showAsAction="always" />
 
 
 </menu>

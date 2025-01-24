@@ -11,7 +11,7 @@ import java.time.LocalDate
 suspend fun getStockHistoryForInvoice(invoiceID: Int): List<StockHistory> {
     return withContext(Dispatchers.IO) {
 
-        val query = Query("select * FROM StockHistory1 WHERE InvoiceID = $invoiceID")
+        val query = Query("select * from StockHistory1 where InvoiceID = $invoiceID")
         val s = query.execute(Constants.url)
         val res = mutableListOf<StockHistory>()
         query.res.forEach { map ->
@@ -44,7 +44,7 @@ suspend fun getStockForSimilarOrders(order:String): List<StockHistory> {
     return withContext(Dispatchers.IO){
         val split = order.split("_")
         val prefix = split[0]+"_"+split[1]
-        val query = Query("select * FROM StockHistory1 WHERE OrderNumber LIKE '%$prefix%'")
+        val query = Query("select * from StockHistory1 where OrderNumber like '%$prefix%'")
         val s = query.execute(Constants.url)
         val res = mutableListOf<StockHistory>()
         query.res.forEach { map ->
@@ -80,7 +80,7 @@ suspend fun getStockForSupplier(supplier:String, maxDays: Int = 30): List<StockH
     return withContext(Dispatchers.IO){
         val now = LocalDate.now()
         val dateLimit = now.minusDays(maxDays.toLong()).format(Constants.accessFormater)
-        val query = Query("select * FROM StockHistory1 WHERE Supplier = '$supplier' and HistoricDate >= #$dateLimit#")
+        val query = Query("select * from StockHistory1 where Supplier = '$supplier' and HistoricDate >= #$dateLimit#")
         val s = query.execute(Constants.url)
         val res = mutableListOf<StockHistory>()
         query.res.forEach { map ->
