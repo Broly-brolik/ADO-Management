@@ -7,7 +7,7 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="ins_outs">StockHistory variations</string>
+    <string name="ins_outs">INS/Reverse INS</string>
     <string name="selected_orders">""</string>
     <string name="product_id">Product ID</string>
     <string-array name="type_array">

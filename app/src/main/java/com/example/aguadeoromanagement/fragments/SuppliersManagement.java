@@ -304,7 +304,6 @@ public class SuppliersManagement extends Fragment {
                                 LocalDateTime dueOnDate = LocalDateTime.parse(dueOn, Constants.Companion.getFromAccessFormatter());
                                 LocalDateTime now = LocalDateTime.now();
                                 Period period = Period.between(now.toLocalDate(), dueOnDate.toLocalDate());
-                                System.out.println(period.getDays());
                                 int days = period.getDays();
                                 if (days < 0) {
                                     inDelayInvoice.add(invoice.getRemain());

@@ -28,10 +28,10 @@
                 android:text="New IN"/>
 
             <Button
-                android:id="@+id/buttonOut"
+                android:id="@+id/buttonReverseIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OUT"
+                android:text="Reverse IN"
                 android:visibility="gone"/>
         </LinearLayout>
 
@@ -188,6 +188,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save new IN"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/buttonValideReverseIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Validate Reverse In"
             android:visibility="gone"/>
 
     </LinearLayout>

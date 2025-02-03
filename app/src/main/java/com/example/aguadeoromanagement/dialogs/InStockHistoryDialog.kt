@@ -38,6 +38,20 @@ import java.time.format.DateTimeFormatter
 
 
 class InStockHistoryDialog (context: Activity? = null) {
+    private lateinit var editTextProductId: EditText
+    private lateinit var imageViewSearch: ImageView
+    private lateinit var textViewCategory: TextView
+    private lateinit var textViewSubcategory: TextView
+    private lateinit var textViewType: TextView
+    private lateinit var textViewProductCode: TextView
+    private lateinit var typeSpinner: Spinner
+    private lateinit var editTextQuantity: EditText
+    private lateinit var editTextCost: EditText
+    private lateinit var textViewTotal: TextView
+    private lateinit var editTextDetail1: EditText
+    private lateinit var editTextRemark: EditText
+    private lateinit var processSpinner: Spinner
+    private lateinit var flowSpinner: Spinner
 
     fun showDialog(context: Context, selectedItems: List<SupplierOrderMain>) {
         val inflater = LayoutInflater.from(context)
@@ -46,40 +60,29 @@ class InStockHistoryDialog (context: Activity? = null) {
         val containerStockHistory: TableLayout = dialogView.findViewById(R.id.containerStockHistory)
         val selectedItemsTextView: TextView = dialogView.findViewById(R.id.textViewSelectedItems)
         val buttonNewIn: Button = dialogView.findViewById(R.id.buttonNewIn)
-        val buttonOut: Button = dialogView.findViewById(R.id.buttonOut)
-        var editTextProductId: EditText = dialogView.findViewById(R.id.editTextProductId)
-        var textViewCategory: TextView = dialogView.findViewById(R.id.TextViewCategory)
-        var textViewSubcategory: TextView = dialogView.findViewById(R.id.TextViewSubcategory)
-        var textViewType: TextView = dialogView.findViewById(R.id.TextViewType)
-        var textViewProductCode: TextView = dialogView.findViewById(R.id.TextViewProductCode)
-        val imageViewSearch: ImageView = dialogView.findViewById(R.id.search)
-        val editTextDetail1: EditText = dialogView.findViewById(R.id.editTextDetail1)
-        val typeSpinner: Spinner = dialogView.findViewById(R.id.spinnerTextType)
-        val adapterType = ArrayAdapter.createFromResource(
-            context,
-            R.array.type_array,
-            android.R.layout.simple_spinner_item
-        )
+        val buttonReverseIn: Button = dialogView.findViewById(R.id.buttonReverseIn)
+        val buttonValidateReverseIn: Button = dialogView.findViewById(R.id.buttonValideReverseIn)
+        editTextProductId = dialogView.findViewById(R.id.editTextProductId)
+        textViewCategory = dialogView.findViewById(R.id.TextViewCategory)
+        textViewSubcategory = dialogView.findViewById(R.id.TextViewSubcategory)
+        textViewType = dialogView.findViewById(R.id.TextViewType)
+        textViewProductCode = dialogView.findViewById(R.id.TextViewProductCode)
+        imageViewSearch = dialogView.findViewById(R.id.search)
+        editTextDetail1 = dialogView.findViewById(R.id.editTextDetail1)
+        typeSpinner = dialogView.findViewById(R.id.spinnerTextType)
+        editTextQuantity = dialogView.findViewById(R.id.editTextQuantity)
+        editTextCost = dialogView.findViewById(R.id.editTextCost)
+        textViewTotal = dialogView.findViewById(R.id.TextViewTotalCost)
+        editTextRemark = dialogView.findViewById(R.id.editTextRemark)
+        processSpinner = dialogView.findViewById(R.id.spinnerTextProcess)
+        flowSpinner = dialogView.findViewById(R.id.spinnerFlow)
+        val adapterType = ArrayAdapter.createFromResource(context, R.array.type_array, android.R.layout.simple_spinner_item)
         adapterType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         typeSpinner.adapter = adapterType
-        val editTextQuantity: EditText = dialogView.findViewById(R.id.editTextQuantity)
-        val editTextCost: EditText = dialogView.findViewById(R.id.editTextCost)
-        val textViewTotal: TextView = dialogView.findViewById(R.id.TextViewTotalCost)
-        val editTextRemark: EditText = dialogView.findViewById(R.id.editTextRemark)
-        val processSpinner: Spinner = dialogView.findViewById(R.id.spinnerTextProcess)
-        val adapterProcess = ArrayAdapter.createFromResource(
-            context,
-            R.array.process_array,
-            android.R.layout.simple_spinner_item
-        )
+        val adapterProcess = ArrayAdapter.createFromResource(context, R.array.process_array, android.R.layout.simple_spinner_item)
         adapterProcess.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         processSpinner.adapter = adapterProcess
-        val flowSpinner: Spinner = dialogView.findViewById(R.id.spinnerFlow)
-        val adapterFlow = ArrayAdapter.createFromResource(
-            context,
-            R.array.flow_array,
-            android.R.layout.simple_spinner_item
-        )
+        val adapterFlow = ArrayAdapter.createFromResource(context, R.array.flow_array, android.R.layout.simple_spinner_item)
         adapterFlow.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         flowSpinner.adapter = adapterFlow
         val textViewResume: TextView = dialogView.findViewById(R.id.textViewResume)
@@ -105,7 +108,7 @@ class InStockHistoryDialog (context: Activity? = null) {
                     selectedOrder = order.supplierOrderNumber
                     selectedItemsTextView.text = selectedOrder
                     selectedItemsTextView.setTextColor(Color.BLUE)
-                    buttonOut.visibility = View.VISIBLE
+                    buttonReverseIn.visibility = View.VISIBLE
                     CoroutineScope(Dispatchers.Main).launch {
                         stockHistoryList = getOrderComponentBySupplier(selectedOrder!!)
                         val sortedStockHistoryList = stockHistoryList.sortedByDescending { it.historicDate }
@@ -119,9 +122,26 @@ class InStockHistoryDialog (context: Activity? = null) {
             container.addView(textView)
         }
 
-        buttonOut.setOnClickListener{
-            inverseInForOut(context, stockHistoryList)
+        buttonReverseIn.setOnClickListener{
+            buttonValidateReverseIn.visibility = View.VISIBLE
+            toggleFieldVisibility(listOf(editTextProductId, imageViewSearch, textViewCategory, textViewSubcategory,
+                textViewType, textViewProductCode, typeSpinner, editTextQuantity, editTextCost, textViewTotal, editTextRemark))
+            editTextProductId.setText(stockHistoryList.first().productId.toString())
+            typeSpinner.setSelection(1)
+            editTextQuantity.setText(stockHistoryList.first().quantity.toString())
+            editTextCost.setText(stockHistoryList.first().cost.toString())
+        }
+
+        buttonValidateReverseIn.setOnClickListener{
+            reverseIn(context, stockHistoryList)
             containerStockHistory.removeAllViews()
+            toggleFieldVisibility(listOf(editTextProductId, imageViewSearch, textViewCategory, textViewSubcategory,
+                textViewType, textViewProductCode, typeSpinner, editTextQuantity, editTextCost, textViewTotal, editTextRemark))
+            editTextProductId.text = null
+            editTextQuantity.text = null
+            editTextCost.text = null
+            editTextRemark.text = null
+            buttonValidateReverseIn.visibility = View.GONE
         }
 
         imageViewSearch.setOnClickListener {
@@ -144,7 +164,7 @@ class InStockHistoryDialog (context: Activity? = null) {
             val details = StringBuilder()
             if (textViewProductCode.visibility == View.VISIBLE) {
                 //editTextProductId.setTextColor(Color.BLUE)
-                val productId = editTextProductId.text.toString().trim()
+                val productId = editTextProductId.text.toString().toIntOrNull() ?: 0
                 details.append("Product ID: $productId; ")
                 val category = textViewCategory.text.toString()
                 details.append("Category: $category; ")
@@ -160,9 +180,9 @@ class InStockHistoryDialog (context: Activity? = null) {
                 details.append("Process: $process; ")
                 val flow = flowSpinner.selectedItem.toString()
                 details.append("Flow: $flow; ")
-                val quantity = editTextQuantity.text.toString().trim()
+                val quantity = editTextQuantity.text.toString().toDoubleOrNull() ?: 0.0
                 details.append("Quantity: $quantity; ")
-                val cost = editTextCost.text.toString().trim()
+                val cost = editTextCost.text.toString().toDoubleOrNull() ?: 0.0
                 details.append("Cost: $cost; ")
                 val totalCost = textViewTotal.text.toString().trim()
                 details.append("Total Cost: $totalCost; ")
@@ -261,7 +281,7 @@ class InStockHistoryDialog (context: Activity? = null) {
             .format(Instant.now())
 
         val query = """
-    INSERT INTO StockHistory1 (
+    insert into StockHistory1 (
         SupplierOrderMainID, OrderNumber, HistoricDate, ProductID, Supplier, Detail, Type, Quantity, Cost, Remark, Weight, Loss, Process, Flow, SettlementStatus
     ) VALUES (
         $supplierOrderMainID, '$supplierOrderNumber', #$dateTime#, $productID, '$recipient', '$detail', $type, $quantity, $cost, '$remark', $weight, $loss, '$process', $flow, 'Unverified'
@@ -388,17 +408,17 @@ class InStockHistoryDialog (context: Activity? = null) {
         return checkedStockHistoryList
     }
 
-    private fun inverseInForOut(
+    private fun reverseIn(
         context: Context,
         checkedStockHistoryList: List<StockHistory>,
     ) {
         if (checkedStockHistoryList.any { it.type == 2 }) {
             Toast.makeText(context, "Incorrect type selected: OUT", Toast.LENGTH_SHORT).show()
         } else {
-            checkedStockHistoryList.forEach { item ->
-                CoroutineScope(Dispatchers.IO).launch {
-                    insertIntoStockHistory(context, item)
-                }
+            val firstItem = checkedStockHistoryList.first()
+            firstItem.type = 2
+            CoroutineScope(Dispatchers.IO).launch {
+                insertIntoStockHistory(context, firstItem)
             }
         }
     }

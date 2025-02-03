@@ -1,8 +1,6 @@
 package com.example.aguadeoromanagement.networking.api
 
-import android.util.Log
 import com.example.aguadeoromanagement.Constants
-import com.example.aguadeoromanagement.models.Product
 import com.example.aguadeoromanagement.models.StockHistory
 import com.example.aguadeoromanagement.models.SupplierOrderMain
 import com.example.aguadeoromanagement.networking.Query
@@ -10,16 +8,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 suspend fun getSupplierOrderMainHistoryForNumbers(
-    order_list: List<String>,
+    orderList: List<String>,
 ): List<SupplierOrderMain> {
     return withContext(Dispatchers.IO) {
-        var ids_string = ""
-        if (order_list.isNotEmpty()) {
-            order_list.toSet().forEach { ids_string += ("'$it', ") }
-            ids_string = ids_string.removeRange(ids_string.length - 2, ids_string.length)
+        var idsString = ""
+        if (orderList.isNotEmpty()) {
+            orderList.toSet().forEach { idsString += ("'$it', ") }
+            idsString = idsString.removeRange(idsString.length - 2, idsString.length)
         }
         val q =
-            Query("select * from SupplierOrderMain where SupplierOrderNumber in (${ids_string})")
+            Query("select * from SupplierOrderMain where SupplierOrderNumber in (${idsString})")
         val s = q.execute(Constants.url)
         val res = mutableListOf<SupplierOrderMain>()
         q.res.forEach { supplierOrderMain ->
@@ -60,7 +58,7 @@ suspend fun getOrderComponentBySupplier(orderComponent: String): List<StockHisto
                     supplierOrderNumber = map["SupplierOrderMainID"]!!,
                     orderNumber = map["OrderNumber"]!!,
                     historicDate = map["HistoricDate"]!!,
-                    productId = map["ProductID"]!!.toInt(),
+                    productId = map["ProductID"]!!.toIntOrNull() ?: 0,
                     supplier = map["Supplier"]!!,
                     type = map["Type"]!!.toInt(),
                     quantity = map["Quantity"]!!.toDouble(),
