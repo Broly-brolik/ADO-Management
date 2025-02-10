@@ -7,12 +7,12 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="ins_outs">INS/Reverse INS</string>
+    <string name="ins_outs">INS/Reverse</string>
     <string name="selected_orders">""</string>
     <string name="product_id">Product ID</string>
     <string-array name="type_array">
-        <item>1</item>
-        <item>2</item>
+        <item>IN</item>
+        <item>OUT</item>
     </string-array>
     <string-array name="process_array">
         <item>1 Setting</item>

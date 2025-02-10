@@ -22,16 +22,10 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/buttonNewIn"
+                android:id="@+id/buttonReverse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New IN"/>
-
-            <Button
-                android:id="@+id/buttonReverseIn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reverse IN"
+                android:text="Reverse"
                 android:visibility="gone"/>
         </LinearLayout>
 
@@ -66,8 +60,7 @@
                 android:id="@+id/editTextProductId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/product_id"
-                android:visibility="gone"/>
+                android:hint="@string/product_id" />
 
             <ImageView
                 android:id="@+id/search"
@@ -77,8 +70,7 @@
                 android:src="@android:drawable/ic_menu_search"
                 app:layout_constraintStart_toEndOf="@+id/editTextProduct"
                 android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone"/>
+                android:focusable="true" />
 
             <TextView
                 android:id="@+id/TextViewCategory"
@@ -110,30 +102,26 @@
         <Spinner
             android:id="@+id/spinnerTextType"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:layout_height="wrap_content" />
 
         <EditText
             android:id="@+id/editTextQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Quantity"
-            android:inputType="numberDecimal"
-            android:visibility="gone"/>
+            android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/editTextCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Cost"
-            android:inputType="numberDecimal"
-            android:visibility="gone"/>
+            android:inputType="numberDecimal" />
 
         <TextView
             android:id="@+id/TextViewTotalCost"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:layout_height="wrap_content" />
 
         <Spinner
             android:id="@+id/spinnerTextProcess"
@@ -141,7 +129,6 @@
             android:layout_height="wrap_content"
             android:hint="Process"
             android:inputType="number"
-            android:visibility="gone"
             android:layout_marginBottom="16dp"/>
 
         <Spinner
@@ -149,22 +136,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Flow"
-            android:inputType="number"
-            android:visibility="gone"/>
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/editTextDetail1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Detail"
-            android:visibility="gone"/>
+            android:hint="Detail" />
 
         <EditText
             android:id="@+id/editTextRemark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Remark"
-            android:visibility="gone"/>
+            android:hint="Remark" />
 
         <TextView
             android:id="@+id/textViewResume"
@@ -180,8 +164,7 @@
             android:id="@+id/buttonVerify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Verify IN"
-            android:visibility="gone"/>
+            android:text="Verify IN" />
 
         <Button
             android:id="@+id/buttonSave"
@@ -191,10 +174,10 @@
             android:visibility="gone"/>
 
         <Button
-            android:id="@+id/buttonValideReverseIn"
+            android:id="@+id/buttonValideReverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Validate Reverse In"
+            android:text="Validate Reverse"
             android:visibility="gone"/>
 
     </LinearLayout>

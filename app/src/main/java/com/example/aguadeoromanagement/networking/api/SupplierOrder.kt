@@ -49,7 +49,7 @@ suspend fun getOrderComponentBySupplier(orderComponent: String): List<StockHisto
     return withContext(Dispatchers.IO){
         val orderComponentString: String = orderComponent.substringBeforeLast("_")
         val q =
-            Query("select * FROM StockHistory1 WHERE OrderNumber like '%$orderComponentString%'")
+            Query("select * from StockHistory1 where OrderNumber like '%$orderComponentString%'")
         val succes = q.execute(Constants.url)
         val res = mutableListOf<StockHistory>()
         q.res.forEach{ map ->
@@ -64,6 +64,7 @@ suspend fun getOrderComponentBySupplier(orderComponent: String): List<StockHisto
                     quantity = map["Quantity"]!!.toDouble(),
                     cost = map["Cost"]?.toDoubleOrNull() ?: 0.0,
                     flow = map["Flow"]!!,
+                    process = map["Process"]!!,
                 )
             )
         }
