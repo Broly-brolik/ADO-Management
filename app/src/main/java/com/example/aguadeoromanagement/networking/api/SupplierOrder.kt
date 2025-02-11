@@ -60,7 +60,7 @@ suspend fun getOrderComponentBySupplier(orderComponent: String): List<StockHisto
                     historicDate = map["HistoricDate"]!!,
                     productId = map["ProductID"]!!.toIntOrNull() ?: 0,
                     supplier = map["Supplier"]!!,
-                    type = map["Type"]!!.toInt(),
+                    type = map["Type"]!!.toIntOrNull()?: 0,
                     quantity = map["Quantity"]!!.toDouble(),
                     cost = map["Cost"]?.toDoubleOrNull() ?: 0.0,
                     flow = map["Flow"]!!,

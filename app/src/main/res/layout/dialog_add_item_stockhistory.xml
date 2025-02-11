@@ -60,7 +60,8 @@
                 android:id="@+id/editTextProductId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/product_id" />
+                android:hint="@string/product_id"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/search"
@@ -70,7 +71,8 @@
                 android:src="@android:drawable/ic_menu_search"
                 app:layout_constraintStart_toEndOf="@+id/editTextProduct"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/TextViewCategory"
@@ -102,26 +104,30 @@
         <Spinner
             android:id="@+id/spinnerTextType"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/editTextQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Quantity"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/editTextCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Cost"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/TextViewTotalCost"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <Spinner
             android:id="@+id/spinnerTextProcess"
@@ -129,26 +135,30 @@
             android:layout_height="wrap_content"
             android:hint="Process"
             android:inputType="number"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"/>
 
         <Spinner
             android:id="@+id/spinnerFlow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Flow"
-            android:inputType="number" />
+            android:inputType="number"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/editTextDetail1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Detail" />
+            android:hint="Detail"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/editTextRemark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Remark" />
+            android:hint="Remark"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/textViewResume"
@@ -164,7 +174,8 @@
             android:id="@+id/buttonVerify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Verify IN" />
+            android:text="Verify"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/buttonSave"
@@ -177,7 +188,7 @@
             android:id="@+id/buttonValideReverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Validate Reverse"
+            android:text="Save Reverse"
             android:visibility="gone"/>
 
     </LinearLayout>

@@ -232,7 +232,7 @@ public class SuppliersManagement extends Fragment {
                 Log.e("time get Supplier main history", String.valueOf(System.currentTimeMillis() - start[0]));
 
                 for (SupplierOrderMain order : data2) {
-                    if (!order.getStatus().equals("Status 3")) {
+                    if (!order.getStatus().equals("Status 3") && !order.getStatus().equals("Status 0")) {
                         supplierOrderMainHistory.add(order);
                     }
                 }

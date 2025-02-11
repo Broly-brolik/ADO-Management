@@ -51,6 +51,8 @@ class InStockHistoryDialog(context: Activity? = null) {
     private lateinit var editTextRemark: EditText
     private lateinit var processSpinner: Spinner
     private lateinit var flowSpinner: Spinner
+    private lateinit var buttonValidateReverse: Button
+    private lateinit var buttonVerify: Button
 
     // This property will hold the currently selected StockHistory record.
     private var selectedStockHistory: StockHistory? = null
@@ -61,10 +63,10 @@ class InStockHistoryDialog(context: Activity? = null) {
         val container: LinearLayout = dialogView.findViewById(R.id.containerSelectedItems)
         val containerStockHistory: TableLayout = dialogView.findViewById(R.id.containerStockHistory)
         val selectedItemsTextView: TextView = dialogView.findViewById(R.id.textViewSelectedItems)
-        val buttonReverse: Button = dialogView.findViewById(R.id.buttonReverse)
-        val buttonValidateReverse: Button = dialogView.findViewById(R.id.buttonValideReverse)
 
         editTextProductId = dialogView.findViewById(R.id.editTextProductId)
+
+        buttonValidateReverse= dialogView.findViewById(R.id.buttonValideReverse)
 
         textViewCategory = dialogView.findViewById(R.id.TextViewCategory)
         textViewSubcategory = dialogView.findViewById(R.id.TextViewSubcategory)
@@ -94,7 +96,7 @@ class InStockHistoryDialog(context: Activity? = null) {
         flowSpinner.adapter = adapterFlow
 
         val textViewResume: TextView = dialogView.findViewById(R.id.textViewResume)
-        val buttonVerify: Button = dialogView.findViewById(R.id.buttonVerify)
+        buttonVerify = dialogView.findViewById(R.id.buttonVerify)
         val buttonSave: Button = dialogView.findViewById(R.id.buttonSave)
         var selectedOrder: String? = null
 
@@ -107,48 +109,35 @@ class InStockHistoryDialog(context: Activity? = null) {
                 setPadding(8, 8, 8, 8)
                 setTextColor(context.getColor(android.R.color.black))
                 setOnClickListener {
+                    toggleFieldVisibility(
+                        listOf(
+                            editTextProductId, imageViewSearch, textViewCategory, textViewSubcategory, buttonVerify,
+                            textViewType, textViewProductCode, typeSpinner, editTextQuantity, editTextCost, textViewTotal,
+                            processSpinner, flowSpinner, editTextDetail1, editTextRemark
+                        )
+                    )
                     selectedOrder = order.supplierOrderNumber
                     selectedItemsTextView.text = selectedOrder
                     selectedItemsTextView.setTextColor(Color.BLUE)
-                    buttonReverse.visibility = View.VISIBLE
                     CoroutineScope(Dispatchers.Main).launch {
-                        // Get and sort the stock history records for this order.
                         val stockHistoryList = getOrderComponentBySupplier(selectedOrder!!)
-                        val sortedStockHistoryList = stockHistoryList.sortedByDescending { it.historicDate }
-                        // Display the history in the table.
+                        val sortedStockHistoryList: List<StockHistory> = stockHistoryList.sortedWith(
+                            compareBy<StockHistory> { it.productId }
+                                .thenByDescending { it.historicDate }
+                        )
                         displayStockHistory(containerStockHistory, sortedStockHistoryList)
-                        // If the reverse fields are visible, hide them when a new order is chosen.
-                        if (textViewProductCode.visibility == View.VISIBLE) {
-                            toggleFieldVisibility(
-                                listOf(editTextProductId, editTextDetail1, typeSpinner, editTextQuantity, editTextCost, editTextRemark, processSpinner, flowSpinner)
-                            )
-                        }
                     }
                 }
             }
             container.addView(textView)
         }
 
-        // When the user clicks "Reverse", check that a row is selected
-        buttonReverse.setOnClickListener {
-            if (selectedStockHistory != null) {
-                buttonValidateReverse.visibility = View.VISIBLE
-                toggleFieldVisibility(
-                    listOf(
-                        editTextProductId, imageViewSearch, textViewCategory, textViewSubcategory,
-                        textViewType, textViewProductCode, typeSpinner, editTextQuantity, editTextCost, textViewTotal, processSpinner, flowSpinner, editTextDetail1, editTextRemark
-                    )
-                )
-                // Update the fields with the current selected record.
-                updateReverseFields(selectedStockHistory!!)
-            } else {
-                Toast.makeText(context, "Please select a stock history record", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        // Validate reversal
         buttonValidateReverse.setOnClickListener {
             selectedStockHistory?.let { record ->
+                record.quantity = editTextQuantity.text.toString().toDoubleOrNull() ?: 0.0
+                record.cost = editTextCost.text.toString().toDoubleOrNull() ?: 0.0
+                record.detail = editTextDetail1.text.toString()
+                record.remark = editTextRemark.text.toString()
                 reverse(context, record)
                 containerStockHistory.removeAllViews()
                 toggleFieldVisibility(
@@ -160,7 +149,6 @@ class InStockHistoryDialog(context: Activity? = null) {
                 clearForm(dialogView as ViewGroup)
                 clearReverseFields()
                 buttonValidateReverse.visibility = View.GONE
-                // Reset the selection variable.
                 selectedStockHistory = null
             }
         }
@@ -253,18 +241,11 @@ class InStockHistoryDialog(context: Activity? = null) {
                 }
             }
             clearForm(dialogView as ViewGroup)
-            toggleFieldVisibility(
-                listOf(
-                    editTextProductId, editTextDetail1, imageViewSearch, textViewTotal,
-                    typeSpinner, editTextQuantity, editTextCost, editTextRemark, processSpinner, flowSpinner
-                )
-            )
             textViewResume.text = ""
             textViewCategory.text = ""
             textViewSubcategory.text = ""
             textViewType.text = ""
             textViewProductCode.text = ""
-            buttonVerify.visibility = View.GONE
             buttonSave.visibility = View.GONE
         }
 
@@ -430,6 +411,7 @@ class InStockHistoryDialog(context: Activity? = null) {
                 tag = stockHistory
                 setOnCheckedChangeListener { buttonView, isChecked ->
                     if (isChecked) {
+                        buttonValidateReverse.visibility = View.VISIBLE
                         // Uncheck any other checkboxes in the table.
                         for (i in 0 until tableLayout.childCount) {
                             val child = tableLayout.getChildAt(i)
@@ -448,6 +430,7 @@ class InStockHistoryDialog(context: Activity? = null) {
                     } else {
                         // If no checkbox is selected, clear the reverse fields.
                         var anyChecked = false
+                        buttonValidateReverse.visibility = View.GONE
                         for (i in 0 until tableLayout.childCount) {
                             val child = tableLayout.getChildAt(i)
                             if (child is TableRow) {
@@ -484,7 +467,6 @@ class InStockHistoryDialog(context: Activity? = null) {
         editTextCost.setText(stockHistory.cost.toString())
         val total = stockHistory.quantity * stockHistory.cost
         textViewTotal.text = total.toString()
-        Log.d("zzz", "process: ${stockHistory.process}")
         processSpinner.setSelection(stockHistory.process.toInt()-1)
         flowSpinner.setSelection(stockHistory.flow.toInt()-1)
     }
@@ -529,9 +511,3 @@ class InStockHistoryDialog(context: Activity? = null) {
         }
     }
 }
-
-// changer in en out quand il click sur reverse. + vérifier
-// que les fields modifiés sont dans la query
-// ajouter process et flow dans l'affichage du reverse.
-// ajouter un filtre pour product id.
-// retirer les status 0 dans open orders
