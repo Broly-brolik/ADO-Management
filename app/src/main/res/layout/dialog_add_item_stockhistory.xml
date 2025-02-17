@@ -174,22 +174,14 @@
             android:id="@+id/buttonVerify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Verify"
-            android:visibility="gone"/>
+            android:text="Verify"/>
 
         <Button
             android:id="@+id/buttonSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save new IN"
-            android:visibility="gone"/>
+            android:text="Save" />
 
-        <Button
-            android:id="@+id/buttonValideReverse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save Reverse"
-            android:visibility="gone"/>
 
     </LinearLayout>
 

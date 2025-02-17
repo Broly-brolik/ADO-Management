@@ -26,6 +26,7 @@ import com.example.aguadeoromanagement.Constants
 import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.models.*
 import com.example.aguadeoromanagement.networking.Query
+import com.example.aguadeoromanagement.networking.api.getOrderComponentById
 import com.example.aguadeoromanagement.networking.api.getOrderComponentBySupplier
 import com.example.aguadeoromanagement.networking.api.searchProductById
 import kotlinx.coroutines.CoroutineScope
@@ -51,8 +52,11 @@ class InStockHistoryDialog(context: Activity? = null) {
     private lateinit var editTextRemark: EditText
     private lateinit var processSpinner: Spinner
     private lateinit var flowSpinner: Spinner
-    private lateinit var buttonValidateReverse: Button
     private lateinit var buttonVerify: Button
+    val dateTime = DateTimeFormatter
+        .ofPattern("yyyy/MM/dd HH:mm:ss")
+        .withZone(ZoneOffset.ofHours(1))
+        .format(Instant.now())
 
     // This property will hold the currently selected StockHistory record.
     private var selectedStockHistory: StockHistory? = null
@@ -65,8 +69,6 @@ class InStockHistoryDialog(context: Activity? = null) {
         val selectedItemsTextView: TextView = dialogView.findViewById(R.id.textViewSelectedItems)
 
         editTextProductId = dialogView.findViewById(R.id.editTextProductId)
-
-        buttonValidateReverse= dialogView.findViewById(R.id.buttonValideReverse)
 
         textViewCategory = dialogView.findViewById(R.id.TextViewCategory)
         textViewSubcategory = dialogView.findViewById(R.id.TextViewSubcategory)
@@ -104,7 +106,7 @@ class InStockHistoryDialog(context: Activity? = null) {
 
         selectedItems.forEach { order ->
             val textView = TextView(context).apply {
-                text = order.supplierOrderNumber
+                text = order.supplierOrderNumber.substringBeforeLast("_")
                 textSize = 16f
                 setPadding(8, 8, 8, 8)
                 setTextColor(context.getColor(android.R.color.black))
@@ -116,11 +118,13 @@ class InStockHistoryDialog(context: Activity? = null) {
                             processSpinner, flowSpinner, editTextDetail1, editTextRemark
                         )
                     )
-                    selectedOrder = order.supplierOrderNumber
-                    selectedItemsTextView.text = selectedOrder
+                    selectedOrder = order.supplierOrderNumber.substringBeforeLast("_")
+                    selectedItemsTextView.text = "$selectedOrder :"
                     selectedItemsTextView.setTextColor(Color.BLUE)
+                    selectedItemsTextView.textSize = 20f
                     CoroutineScope(Dispatchers.Main).launch {
-                        val stockHistoryList = getOrderComponentBySupplier(selectedOrder!!)
+                        //val stockHistoryList = getOrderComponentBySupplier(selectedOrder!!)
+                        val stockHistoryList = getOrderComponentById(order.id)
                         val sortedStockHistoryList: List<StockHistory> = stockHistoryList.sortedWith(
                             compareBy<StockHistory> { it.productId }
                                 .thenByDescending { it.historicDate }
@@ -130,27 +134,6 @@ class InStockHistoryDialog(context: Activity? = null) {
                 }
             }
             container.addView(textView)
-        }
-
-        buttonValidateReverse.setOnClickListener {
-            selectedStockHistory?.let { record ->
-                record.quantity = editTextQuantity.text.toString().toDoubleOrNull() ?: 0.0
-                record.cost = editTextCost.text.toString().toDoubleOrNull() ?: 0.0
-                record.detail = editTextDetail1.text.toString()
-                record.remark = editTextRemark.text.toString()
-                reverse(context, record)
-                containerStockHistory.removeAllViews()
-                toggleFieldVisibility(
-                    listOf(
-                        editTextProductId, imageViewSearch, textViewCategory, textViewSubcategory,
-                        textViewType, textViewProductCode, typeSpinner, editTextQuantity, editTextCost, textViewTotal, processSpinner, flowSpinner, editTextDetail1, editTextRemark
-                    )
-                )
-                clearForm(dialogView as ViewGroup)
-                clearReverseFields()
-                buttonValidateReverse.visibility = View.GONE
-                selectedStockHistory = null
-            }
         }
 
         imageViewSearch.setOnClickListener {
@@ -173,57 +156,57 @@ class InStockHistoryDialog(context: Activity? = null) {
             val details = StringBuilder()
             if (textViewProductCode.visibility == View.VISIBLE) {
                 val productId = editTextProductId.text.toString().toIntOrNull() ?: 0
-                details.append("Product ID: $productId; ")
-                val category = textViewCategory.text.toString()
-                details.append("Category: $category; ")
+                details.append("Product ID: $productId\n")
+                /*val category = textViewCategory.text.toString()
+                details.append("Category: $category\n")
                 val subCategory = textViewSubcategory.text.toString()
-                details.append("Subcategory: $subCategory; ")
+                details.append("Subcategory: $subCategory\n")
                 val type = textViewType.text.toString()
-                details.append("Type: $type; ")
+                details.append("Type: $type\n")
                 val productCode = textViewProductCode.text.toString()
-                details.append("Product Code: $productCode; ")
+                details.append("Product Code: $productCode\n")*/
                 val typeSpinnerStr = typeSpinner.selectedItem.toString()
-                details.append("Type Spinner: $typeSpinnerStr; ")
+                details.append("Type Spinner: $typeSpinnerStr\n")
                 val process = processSpinner.selectedItem.toString()
-                details.append("Process: $process; ")
+                details.append("Process: $process\n")
                 val flow = flowSpinner.selectedItem.toString()
-                details.append("Flow: $flow; ")
+                details.append("Flow: $flow\n")
                 val quantity = editTextQuantity.text.toString().toDoubleOrNull() ?: 0.0
-                details.append("Quantity: $quantity; ")
+                details.append("Quantity: $quantity\n")
                 val cost = editTextCost.text.toString().toDoubleOrNull() ?: 0.0
-                details.append("Cost: $cost; ")
+                details.append("Cost: $cost\n")
                 val totalCost = textViewTotal.text.toString().trim()
-                details.append("Total Cost: $totalCost; ")
+                details.append("Total Cost: $totalCost\n")
                 val detail = editTextDetail1.text.toString().trim()
-                details.append("Detail: $detail; ")
+                details.append("Detail: $detail\n")
             }
             textViewResume.text = details.toString()
             textViewResume.visibility = View.VISIBLE
-            buttonSave.visibility = View.VISIBLE
         }
 
         buttonSave.setOnClickListener {
-            if (editTextProductId.visibility == View.VISIBLE) {
-                val productID = editTextProductId.text.toString().toIntOrNull() ?: 0
-                val detail = editTextDetail1.text.toString()
-                val type = typeSpinner.selectedItemPosition + 1
-                val quantity = editTextQuantity.text.toString().toDoubleOrNull() ?: 0.0
-                val cost = editTextCost.text.toString().toDoubleOrNull() ?: 0.0
-                val totalCost = quantity * cost
-                textViewTotal.text = totalCost.toString()
-                val remark = editTextRemark.text.toString()
-                val process = processSpinner.selectedItemPosition + 1
-                val flow = flowSpinner.selectedItemPosition + 1
+            val productID = editTextProductId.text.toString().toIntOrNull() ?: 0
+            val detail = editTextDetail1.text.toString()
+            val type = typeSpinner.selectedItemPosition + 1
+            val quantity = editTextQuantity.text.toString().toDoubleOrNull() ?: 0.0
+            val cost = editTextCost.text.toString().toDoubleOrNull() ?: 0.0
+            val totalCost = quantity * cost
+            textViewTotal.text = totalCost.toString()
+            val remark = editTextRemark.text.toString()
+            val process = processSpinner.selectedItemPosition + 1
+            val flow = flowSpinner.selectedItemPosition + 1
+            if (validateInputs(quantity, cost)) {
+            selectedItems.find { it.supplierOrderNumber.contains(selectedOrder ?: "") }?.let { order ->
+                val supplier = selectedStockHistory?.supplier ?: "NaN"
 
-                if (validateInputs(quantity, cost)) {
-                    selectedItems.find { it.supplierOrderNumber == selectedOrder }?.let { order ->
-                        CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(Dispatchers.IO).launch {
                             insertStockHistory(
                                 context,
                                 order.id,
                                 order.supplierOrderNumber,
                                 productID,
                                 order.recipient,
+                                //supplier,
                                 detail = detail,
                                 type = type,
                                 quantity = quantity,
@@ -236,9 +219,6 @@ class InStockHistoryDialog(context: Activity? = null) {
                             )
                         }
                     }
-                } else {
-                    Log.e("InStockHistoryDialog", "Invalid input data.")
-                }
             }
             clearForm(dialogView as ViewGroup)
             textViewResume.text = ""
@@ -246,7 +226,6 @@ class InStockHistoryDialog(context: Activity? = null) {
             textViewSubcategory.text = ""
             textViewType.text = ""
             textViewProductCode.text = ""
-            buttonSave.visibility = View.GONE
         }
 
         AlertDialog.Builder(context)
@@ -281,11 +260,6 @@ class InStockHistoryDialog(context: Activity? = null) {
         process: Int,
         flow: Int,
     ) {
-        val dateTime = DateTimeFormatter
-            .ofPattern("yyyy/MM/dd HH:mm:ss")
-            .withZone(ZoneOffset.ofHours(1))
-            .format(Instant.now())
-
         val query = """
     insert into StockHistory1 (
         SupplierOrderMainID, OrderNumber, HistoricDate, ProductID, Supplier, Detail, Type, Quantity, Cost, Remark, Weight, Loss, Process, Flow, SettlementStatus
@@ -337,6 +311,8 @@ class InStockHistoryDialog(context: Activity? = null) {
      * When a checkbox is checked, update the “reverse” fields with that record’s data.
      * When a checkbox is unchecked and no other is selected, clear the fields.
      */
+    private var currentCheckedCheckBox: CheckBox? = null
+
     private fun displayStockHistory(container: TableLayout, stockHistoryList: List<StockHistory>) {
         container.removeAllViews()
         // Create a table layout
@@ -405,14 +381,11 @@ class InStockHistoryDialog(context: Activity? = null) {
                 }
                 row.addView(cellTextView)
             }
-            // Create a checkbox for selection.
             val checkBox = CheckBox(container.context).apply {
                 // Use the tag to keep a reference to the corresponding StockHistory record.
                 tag = stockHistory
                 setOnCheckedChangeListener { buttonView, isChecked ->
                     if (isChecked) {
-                        buttonValidateReverse.visibility = View.VISIBLE
-                        // Uncheck any other checkboxes in the table.
                         for (i in 0 until tableLayout.childCount) {
                             val child = tableLayout.getChildAt(i)
                             if (child is TableRow) {
@@ -426,11 +399,11 @@ class InStockHistoryDialog(context: Activity? = null) {
                         }
                         // Update the selected record and update the reverse fields.
                         selectedStockHistory = stockHistory
+                        Log.d("InStockHistoryDialog", "Selected stock history: $stockHistory")
                         updateReverseFields(stockHistory)
                     } else {
                         // If no checkbox is selected, clear the reverse fields.
                         var anyChecked = false
-                        buttonValidateReverse.visibility = View.GONE
                         for (i in 0 until tableLayout.childCount) {
                             val child = tableLayout.getChildAt(i)
                             if (child is TableRow) {
@@ -488,7 +461,6 @@ class InStockHistoryDialog(context: Activity? = null) {
 
     /**
      * Reverses the type of the selected stock history record.
-     * (For example, toggling IN to OUT and vice-versa.)
      */
     private fun reverse(context: Context, stockHistory: StockHistory) {
         stockHistory.type = if (stockHistory.type == 1) 2 else 1
@@ -500,14 +472,18 @@ class InStockHistoryDialog(context: Activity? = null) {
     private suspend fun insertIntoStockHistory(context: Context, stockHistory: StockHistory) {
         val query = """
     INSERT INTO StockHistory1 (SupplierOrderMainID, OrderNumber, HistoricDate, ProductID, Supplier, Type, Quantity, Process, Flow, Detail, Remark, SettlementStatus) 
-    VALUES ('${stockHistory.supplierOrderNumber}', '${stockHistory.orderNumber}', #${stockHistory.historicDate}#, ${stockHistory.productId}, '${stockHistory.supplier}', ${stockHistory.type}, ${stockHistory.quantity}, ${stockHistory.process}, ${stockHistory.flow}, '${stockHistory.detail}', '${stockHistory.remark}', 'Unverified')
+    VALUES ('${stockHistory.supplierOrderNumber}', '${stockHistory.orderNumber}', #$dateTime#, ${stockHistory.productId}, '${stockHistory.supplier}', ${stockHistory.type}, ${stockHistory.quantity}, ${stockHistory.process}, ${stockHistory.flow}, '${stockHistory.detail}', '${stockHistory.remark}', 'Unverified')
     """
         try {
             withContext(Dispatchers.IO) {
                 Query(query).execute(Constants.url)
+                Toast.makeText(context, "Data saved successfully", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
             Log.e("InStockHistoryDialog", "Error inserting record: $stockHistory", e)
+            Toast.makeText(context, "Error saving data", Toast.LENGTH_SHORT).show()
         }
     }
 }
+
+// feed back when save and unchecked the checkbox.
