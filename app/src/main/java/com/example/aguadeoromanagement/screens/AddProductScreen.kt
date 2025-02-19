@@ -1,7 +1,6 @@
 package com.example.aguadeoromanagement.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*

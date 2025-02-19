@@ -1,6 +1,5 @@
 package com.example.aguadeoromanagement.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -34,7 +33,6 @@ import com.example.aguadeoromanagement.states.DetectedCodes
 import com.example.aguadeoromanagement.states.InventoryListState
 import com.example.aguadeoromanagement.ui.theme.MainGreen
 import com.example.aguadeoromanagement.ui.theme.Shapes
-import com.example.aguadeoromanagement.viewmodels.InventoryViewModelFactory
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)

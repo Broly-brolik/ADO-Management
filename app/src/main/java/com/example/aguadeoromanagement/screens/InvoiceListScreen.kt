@@ -23,14 +23,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.Navigation.findNavController
 import com.example.aguadeoromanagement.Constants
 import com.example.aguadeoromanagement.ManagementApplication
-import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.components.Spinner
 import com.example.aguadeoromanagement.enums.OrderGroupBy
 import com.example.aguadeoromanagement.fragments.InvoiceListFragmentDirections
-import com.example.aguadeoromanagement.fragments.SuppliersManagementDirections
 import com.example.aguadeoromanagement.models.Invoice
 import com.example.aguadeoromanagement.models.InvoiceItem
 import com.example.aguadeoromanagement.models.Payment

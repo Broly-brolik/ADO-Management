@@ -126,8 +126,8 @@ suspend fun searchProductById(productID: String): List<Product> {
             res.add(
                 Product(
                     productCode = map["ProductCode"]!!,
-                    category = map["Category"]!!,
-                    subCategory = map["Subcategory"]!!,
+                    category = map["Category"]!!.toIntOrNull() ?: 0,
+                    subCategory = map["Subcategory"]!!.toIntOrNull() ?: 0,
                     type = map["Type"]!!,
                 )
             )

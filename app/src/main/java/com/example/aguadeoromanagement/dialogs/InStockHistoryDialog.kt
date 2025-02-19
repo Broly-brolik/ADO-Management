@@ -27,7 +27,6 @@ import com.example.aguadeoromanagement.R
 import com.example.aguadeoromanagement.models.*
 import com.example.aguadeoromanagement.networking.Query
 import com.example.aguadeoromanagement.networking.api.getOrderComponentById
-import com.example.aguadeoromanagement.networking.api.getOrderComponentBySupplier
 import com.example.aguadeoromanagement.networking.api.searchProductById
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -142,8 +141,8 @@ class InStockHistoryDialog(context: Activity? = null) {
                 CoroutineScope(Dispatchers.Main).launch {
                     val product = searchProductById(productId)
                     val product2 = product.firstOrNull()
-                    textViewCategory.text = product2?.category
-                    textViewSubcategory.text = product2?.subCategory
+                    textViewCategory.text = product2?.category.toString() ?: ""
+                    textViewSubcategory.text = product2?.subCategory.toString() ?: ""
                     textViewType.text = product2?.type
                     textViewProductCode.text = product2?.productCode
                 }
@@ -486,4 +485,4 @@ class InStockHistoryDialog(context: Activity? = null) {
     }
 }
 
-// feed back when save and unchecked the checkbox.
+

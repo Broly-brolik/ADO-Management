@@ -22,26 +22,33 @@ class AdoStonesViewModel : ViewModel() {
     fun searchProductById(productID: String) {
         val query = Query("select * from Products where ID = $productID")
         val success = query.execute(Constants.url)
+        val query2 = Query("select Picture.FileData from Products where ID = $productID")
+        val success2 = query2.execute(Constants.url)
+
+        if (success2) { // et ici
+            Log.d("zzz", "ici")
+            val imageData = query2.res.firstOrNull()?.get("Picture.FileData") ?: ""
+            if (imageData.isNotEmpty()) {
+                Log.d("AdoStonesViewModel", "Image data found for product $productID")
+            }
+        }
+
         if (success) {
             val res = mutableListOf<Product>()
 
             query.res.forEach { map ->
                 val product = Product(
-                    id = map["ID"]?.toDoubleOrNull()?.toInt() ?: 0,
+                    id = map["ID"]?.toIntOrNull() ?: 0,
                     productCode = map["ProductCode"] ?: "",
                     description = map["Description"] ?: "",
                     unit = map["Unit"] ?: "",
-                    category = map["Category"] ?: "",
-                    subCategory = map["Subcategory"] ?: "",
+                    category = map["Category"]?.toIntOrNull() ?: 0,
+                    subCategory = map["Subcategory"]?.toIntOrNull() ?: 0,
                     type = map["Type"] ?: "",
                     entryDate = map["EntryDate"] ?: "",
                     line = map["Line"] ?: "",
                     colorAdo = map["Color_ADO"] ?: "",
-                    imageUrl = if (map["Picture"].isNullOrEmpty()) {
-                        ""
-                    } else {
-                        "${Constants.imageUrl}/stones/${map["Picture"]}"
-                    }
+                    image = map["Picture"] ?: "" // ici
                 )
 
                 viewModelScope.launch {
@@ -55,6 +62,46 @@ class AdoStonesViewModel : ViewModel() {
             }
         } else {
             _error.value = "Failed to fetch products."
+        }
+    }
+
+    fun getNextId(): Int {
+        val lastIdQuery = Query("select max(ID) from Products")
+        val success = lastIdQuery.execute(Constants.url)
+        var newId = 0
+        val lastId = lastIdQuery.res.firstOrNull()?.get("Expr1000")?.toDouble()?.toInt()
+        newId = if (lastId != null) lastId + 1 else 0
+        return newId
+    }
+
+    fun createNewProduct(product: Product) {
+
+        val query = Query(
+            "insert into Products (ID, ProductCode, OrderType, ShortCode, Size, Description, Unit, Category, Subcategory, Type, EntryDate, Line, Color_ADO, List_Price, Remarks, Remarks2, Standard_Cost, Discontinued, ReorderLevel) values (" +
+                    "${product.id}, " +
+                    "'${product.productCode}', " +
+                    "'${product.orderType}', " +
+                    "'${product.shortCode}', " +
+                    "'${product.size}', " +
+                    "'${product.description}', " +
+                    "'${product.unit}', " +
+                    "${product.category}, " +
+                    "${product.subCategory}, " +
+                    "'${product.type}', " +
+                    "#${product.entryDate}#, " +
+                    "'${product.line}', " +
+                    "'${product.colorAdo}', " +
+                    "${product.listPrice}, " +
+                    "'${product.remarks}', " +
+                    "'${product.remarks2}', " +
+                    "'${product.standardCost}', " +
+                    "${product.discontinued}, " +
+                    "${product.reorderLevel} " +
+                    ")"
+        )
+        val success = query.execute(Constants.url)
+        if (!success) {
+            _error.value = "Failed to create product."
         }
     }
 }

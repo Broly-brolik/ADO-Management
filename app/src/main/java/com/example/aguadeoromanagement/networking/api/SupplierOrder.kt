@@ -87,7 +87,6 @@ suspend fun getOrderComponentById(supplierOrderMainId: Int): List<StockHistory>{
         q2.res.forEach { map ->
             idList.add(map["ID"]!!.toInt())
         }
-        Log.d("idList", idList.toString())
         val res = mutableListOf<StockHistory>()
         val q3 = Query("select * from StockHistory1 where SupplierOrderMainID in (${idList.joinToString(",")})")
         val success3 = q3.execute(Constants.url)
