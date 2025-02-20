@@ -21,6 +21,8 @@ import com.example.aguadeoromanagement.models.Product
 import com.example.aguadeoromanagement.viewmodels.AdoStonesViewModel
 import java.text.SimpleDateFormat
 import android.util.Log
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.mutableIntStateOf
 import com.example.aguadeoromanagement.components.Spinner
 import java.util.Date
@@ -35,55 +37,121 @@ fun AdoStonesScreen(
 ) {
     // Flag to toggle between product list and create screen
     val isCreatingNewProduct = remember { mutableStateOf(false) }
+    val selectedProduct = remember { mutableStateOf<Product?>(null) }
+
+    // New state to choose search mode: "id" or "filters"
+    val searchMode = remember { mutableStateOf("id") }
 
     if (isCreatingNewProduct.value) {
-        // Show the create new product screen
         CreateNewProduct(
             viewModel = viewModel,
-            onProductCreated = { isCreatingNewProduct.value = false }
+            onProductCreated = { isCreatingNewProduct.value = false },
+            templateProduct = selectedProduct.value
         )
     } else {
-        // Existing UI for search and product list
-        val productId = remember { mutableStateOf("") }
         val products = viewModel.products.collectAsState(initial = emptyList())
-        val isSearchTriggered = remember { mutableStateOf(false) }
 
-        LaunchedEffect(isSearchTriggered.value) {
-            if (isSearchTriggered.value) {
-                viewModel.searchProductById(productId.value)
-                isSearchTriggered.value = false
-            }
-        }
-
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            TextField(
-                value = productId.value,
-                onValueChange = { productId.value = it },
-                label = { Text("Enter Product ID") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Button(
-                onClick = {
-                    isSearchTriggered.value = true
-                },
-                modifier = Modifier.padding(vertical = 8.dp)
-            ) {
-                Text("Search")
+        // UI to switch between search modes
+        Column(modifier = Modifier.padding(16.dp)) {
+            // Toggle buttons for search mode
+            Row(modifier = Modifier.padding(bottom = 8.dp)) {
+                Button(onClick = { searchMode.value = "id" }) {
+                    Text("Search by ID")
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Button(onClick = { searchMode.value = "filters" }) {
+                    Text("Search by Filters")
+                }
             }
 
-            Button(
-                onClick = {
-                    // Switch to create product mode
-                    isCreatingNewProduct.value = true
-                },
-                modifier = Modifier.padding(vertical = 8.dp)
-            ) {
-                Text("Create New Product")
+            if (searchMode.value == "id") {
+                // Existing search by ID UI
+                val productId = remember { mutableStateOf("") }
+                TextField(
+                    value = productId.value,
+                    onValueChange = { productId.value = it },
+                    label = { Text("Enter Product ID") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Button(
+                    onClick = {
+                        viewModel.searchProductById(productId.value)
+                    },
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    Text("Search")
+                }
+            } else {
+                // New filter search UI
+                // Product Line options (from your existing lists)
+                val productLineOptions = listOf("Line", "Linea Verde", "Mined", "Max H", "PX Impact", "Standard")
+                val selectedLineIndex = remember { mutableIntStateOf(0) }
+                Text(text = "Product Line:", modifier = Modifier.padding(vertical = 8.dp))
+                Spinner(
+                    entries = productLineOptions,
+                    index = selectedLineIndex.intValue,
+                    label = "Product Line",
+                    onValueChange = { selectedLineIndex.intValue = it }
+                )
+
+                // Category options
+                val categoryOptions = listOf("Stones", "Jewellery", "Labor")
+                val selectedCategoryIndex = remember { mutableIntStateOf(0) }
+                Text(text = "Category:", modifier = Modifier.padding(vertical = 8.dp))
+                Spinner(
+                    entries = categoryOptions,
+                    index = selectedCategoryIndex.intValue,
+                    label = "Category",
+                    onValueChange = { selectedCategoryIndex.intValue = it }
+                )
+
+                // SubCategory options
+                val subCategoryOptions = listOf(
+                    "Round Melee", "Round", "Oval", "Princess", "Marquise", "Baguette", "Tapers", "Trillion",
+                    "Pear Shapes", "Drops", "Cushion", "Octagone", "Antique", "Cabochon", "Emerald",
+                    "Cabochon Marquise", "Cabochon Round", "Rectangle Flat", "Cabochon Rectangle", "Heart",
+                    "Cabochon Antique", "Cabochon Pear Shapes", "Mosaic Antique", "Oval Drill",
+                    "Cabochon Drop Drill", "Oval flat", "Rectangular", "triangle", "HalfCabouchon",
+                    "Octagone plat", "CVD", "Checkerbox square", "HPHT", "Earrings", "Rings", "Necklace",
+                    "Bracelets", "Rose Pear", "Chain", "Pearls", "Sugar loaf", "Fancy", "Metals", "Aascher",
+                    "Slices", "Ball", "Beads", "Radiant", "Ecrou", "Labor cost"
+                )
+                val selectedSubCategoryIndex = remember { mutableIntStateOf(0) }
+                Text(text = "SubCategory:", modifier = Modifier.padding(vertical = 8.dp))
+                Spinner(
+                    entries = subCategoryOptions,
+                    index = selectedSubCategoryIndex.intValue,
+                    label = "SubCategory",
+                    onValueChange = { selectedSubCategoryIndex.intValue = it }
+                )
+
+                // Product Type options
+                val productTypeOptions = listOf("AU 750", "Color", "Diam", "Diam cognac", "Diam noir", "Pearls", "PT 950", "AG 925", "CZ", "Diam Green")
+                val selectedTypeIndex = remember { mutableIntStateOf(0) }
+                Text(text = "Product Type:", modifier = Modifier.padding(vertical = 8.dp))
+                Spinner(
+                    entries = productTypeOptions,
+                    index = selectedTypeIndex.intValue,
+                    label = "Product Type",
+                    onValueChange = { selectedTypeIndex.intValue = it }
+                )
+
+                Button(
+                    onClick = {
+                        viewModel.searchProductsByFilters(
+                            productLineOptions[selectedLineIndex.intValue],
+                            selectedCategoryIndex.intValue,
+                            selectedSubCategoryIndex.intValue,
+                            productTypeOptions[selectedTypeIndex.intValue]
+                        )
+                    },
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    Text("Search")
+                }
             }
 
+            // The rest of your UI to display products
             if (products.value.isEmpty()) {
                 Text(
                     text = "No product found.",
@@ -97,6 +165,15 @@ fun AdoStonesScreen(
                 ) {
                     items(products.value) { product ->
                         ProductItem(product)
+                        Button(
+                            onClick = {
+                                isCreatingNewProduct.value = true
+                                selectedProduct.value = product
+                            },
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        ) {
+                            Text("Use as Template")
+                        }
                     }
                 }
             }
@@ -104,20 +181,41 @@ fun AdoStonesScreen(
     }
 }
 
-
 @Composable
 fun ProductItem(product: Product) {
+    val categoryText = when (product.category) {
+        0 -> "Stones"
+        1 -> "Jewellery"
+        2 -> "Labor"
+        else -> "Unknown"
+    }
+    val subCategoryOptions = listOf(
+        "Round Melee", "Round", "Oval", "Princess", "Marquise", "Baguette", "Tapers", "Trillion",
+        "Pear Shapes", "Drops", "Cushion", "Octagone", "Antique", "Cabochon", "Emerald",
+        "Cabochon Marquise", "Cabochon Round", "Rectangle Flat", "Cabochon Rectangle", "Heart",
+        "Cabochon Antique", "Cabochon Pear Shapes", "Mosaic Antique", "Oval Drill",
+        "Cabochon Drop Drill", "Oval flat", "Rectangular", "triangle", "HalfCabouchon",
+        "Octagone plat", "CVD", "Checkerbox square", "HPHT", "Earrings", "Rings", "Necklace",
+        "Bracelets", "Rose Pear", "Chain", "Pearls", "Sugar loaf", "Fancy", "Metals", "Aascher",
+        "Slices", "Ball", "Beads", "Radiant", "Ecrou", "Labor cost"
+    )
+
+    val subCategoryText = if (product.subCategory in 1..subCategoryOptions.size) {
+        subCategoryOptions[product.subCategory - 1]
+    } else {
+        "Unknown"
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Text(text = "ID: ${product.id}")
+        Text(text = "Product ID: ${product.id}")
         Text(text = "Product Code: ${product.productCode}")
         Text(text = "Description: ${product.description}")
         Text(text = "Unit: ${product.unit}")
-        Text(text = "Category: ${product.category}")
-        Text(text = "SubCategory: ${product.subCategory}")
+        Text(text = "Category: $categoryText")
+        Text(text = "SubCategory: $subCategoryText")
         Text(text = "Type: ${product.type}")
         Text(text = "Entry Date: ${product.entryDate}")
         Text(text = "Line: ${product.line}")
@@ -137,19 +235,26 @@ fun ProductItem(product: Product) {
 @Composable
 fun CreateNewProduct(
     viewModel: AdoStonesViewModel,
-    onProductCreated: () -> Unit
+    onProductCreated: () -> Unit,
+    templateProduct: Product? = null,
 ) {
     // Initialize all the fields as empty.
-    val productCode = remember { mutableStateOf("") }
+    val productCode = remember { mutableStateOf(templateProduct?.productCode ?: "") }
     val orderTypeOptions = listOf("LossOrders", "FinishedOrders")
-    val selectedOrderTypeIndex = remember { mutableIntStateOf(0) }
-    val shortCode = remember { mutableStateOf("") }
-    val size = remember { mutableStateOf("") }
-    val description = remember { mutableStateOf("") }
+    val orderTypeIndex = orderTypeOptions.indexOf(templateProduct?.orderType ?: "LossOrders")
+    val selectedOrderTypeIndex = remember {
+        mutableIntStateOf(if (orderTypeIndex < 0) 0 else orderTypeIndex)
+    }
+    val shortCode = remember { mutableStateOf(templateProduct?.shortCode ?: "") }
+    val size = remember { mutableStateOf(templateProduct?.size ?: "") }
+    val description = remember { mutableStateOf(templateProduct?.description ?: "") }
     val unitOptions = listOf("Pieces", "Gramms")
-    val selectedUnitIndex = remember { mutableIntStateOf(0) }
+    val unitIndex = unitOptions.indexOf(templateProduct?.unit ?: "Pieces")
+    val selectedUnitIndex = remember {
+        mutableIntStateOf(if (unitIndex < 0) 0 else unitIndex)
+    }
     val categoryOptions = listOf("Stones", "Jewellery", "Labor")
-    val selectedCategoryIndex = remember { mutableIntStateOf(0) }
+    val selectedCategoryIndex = remember { mutableIntStateOf(templateProduct?.category ?: 0) }
     val subCategoryOptions = listOf(
         "Round Melee", "Round", "Oval", "Princess", "Marquise", "Baguette", "Tapers", "Trillion",
         "Pear Shapes", "Drops", "Cushion", "Octagone", "Antique", "Cabochon", "Emerald",
@@ -160,35 +265,37 @@ fun CreateNewProduct(
         "Bracelets", "Rose Pear", "Chain", "Pearls", "Sugar loaf", "Fancy", "Metals", "Aascher",
         "Slices", "Ball", "Beads", "Radiant", "Ecrou", "Labor cost"
     )
-    val selectedSubCategoryIndex = remember { mutableIntStateOf(0) }
+    val selectedSubCategoryIndex = remember { mutableIntStateOf(templateProduct?.subCategory ?: 0) }
     val productTypeOptions = listOf("AU 750", "Color", "Diam", "Diam cognac", "Diam noir", "Pearls", "PT 950", "AG 925", "CZ", "Diam Green")
-    val selectedTypeIndex = remember { mutableIntStateOf(0) }
-    val entryDate = remember { mutableStateOf("") }
+    val selectedTypeIndex = remember { mutableIntStateOf(productTypeOptions.indexOf(templateProduct?.type ?: "AU 750")) }
+    val entryDate = remember { mutableStateOf(templateProduct?.entryDate ?: "") }
 
     val productLineOptions = listOf("Line", "Linea Verde", "Mined", "Max H", "PX Impact", "Standard")
-    val selectedLineIndex = remember { mutableIntStateOf(0) }
+    val selectedLineIndex = remember { mutableIntStateOf(productLineOptions.indexOf(templateProduct?.line ?: "Line")) }
 
     val colorAdoOptions = listOf(
         "B", "B1", "B10", "B11", "B12", "B13", "B14", "B15", "B16", "B17", "B18", "B19",
         "B2", "B20", "B21", "B22", "B23", "B24", "B25", "B26", "B28", "B29", "B3",
-        "B30", "B31", "B32", "B33", "B4", "B5", "B6", "B7", "B8", "B9", "CZ",
         "G1", "G10", "G11", "G12", "G13", "G14", "G15", "G16", "G17", "G18", "G19",
         "G2", "G20", "G21", "G3", "G4", "G5", "G6", "G7", "G8", "G9", "K1", "K2", "K3",
         "K4", "K5", "K6", "K7", "O", "O1", "O2", "O3", "O4", "O5", "O6", "O7", "O8",
         "P1", "P2", "P3", "P4", "P5", "R1", "R2", "R3", "R4", "R5", "V1", "V2", "V3",
         "V4", "V5", "V6", "V7", "V8", "Y1", "Y2", "Y3", "Y4", "Y5"
     )
-    val selectedColorAdoIndex = remember { mutableIntStateOf(0) }
-    val listPrice = remember { mutableIntStateOf(0) }
-    val remarks = remember { mutableStateOf("") }
-    val remarks2 = remember { mutableStateOf("") }
-    val standardCost = remember { mutableIntStateOf(0) }
-    val discontinued = remember { mutableIntStateOf(-1) }
-    val discontinuedOptions = listOf("Yes", "No")
-    val discontinuedIndex = remember {
-        mutableIntStateOf(if (discontinued.intValue == -1) 0 else 1)
+    val colorAdoIndex = colorAdoOptions.indexOf(templateProduct?.colorAdo ?: "B")
+    val selectedColorAdoIndex = remember {
+        mutableIntStateOf(if (colorAdoIndex < 0) 0 else colorAdoIndex)
     }
-    val reorderLevel = remember { mutableIntStateOf(0) }
+    val listPrice = remember { mutableIntStateOf(templateProduct?.listPrice ?: 0) }
+    val remarks = remember { mutableStateOf(templateProduct?.remarks ?: "") }
+    val remarks2 = remember { mutableStateOf(templateProduct?.remarks2 ?: "") }
+    val standardCost = remember { mutableIntStateOf(templateProduct?.standardCost ?: 0) }
+    val discontinued = remember { mutableIntStateOf(templateProduct?.discontinued ?: 0) }
+    val discontinuedOptions = listOf("No", "Yes")
+    val discontinuedIndex = remember {
+        mutableIntStateOf(if (discontinued.intValue == 0) 0 else 1)
+    }
+    val reorderLevel = remember { mutableIntStateOf(templateProduct?.reorderLevel ?: 0) }
     // + image
 
     val currentDate = remember {
@@ -263,6 +370,7 @@ fun CreateNewProduct(
             label = "Order Type",
             onValueChange = { selectedOrderTypeIndex.intValue = it }
         )
+        Log.d("zzz", "selectedOrderTypeIndex: ${selectedOrderTypeIndex.intValue}")
         TextField(
             value = shortCode.value,
             onValueChange = { shortCode.value = it },
@@ -335,35 +443,9 @@ fun CreateNewProduct(
             label = "Discontinued",
             onValueChange = { index ->
                 discontinuedIndex.intValue = index
-                discontinued.intValue = if (discontinuedOptions[index] == "Yes") -1 else 0
+                discontinued.intValue = if (discontinuedOptions[index] == "No") 0 else -1
             }
         )
-            /*TextField(
-                value = discontinued.value,
-                onValueChange = { },
-                label = { Text("Discontinued") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) { expanded.value = true },
-                readOnly = true
-            )
-            DropdownMenu(
-                expanded = expanded.value,
-                onDismissRequest = { expanded.value = false },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                options.forEach { option ->
-                    DropdownMenuItem(onClick = {
-                        discontinued.value = option
-                        expanded.value = false
-                    }) {
-                        Text(text = option)
-                    }
-                }
-            }*/
         TextField(
             value = reorderLevel.intValue.toString(),
             onValueChange = { newValue ->
@@ -380,15 +462,15 @@ fun CreateNewProduct(
         Button(
             onClick = {
                 val newProduct = Product(
-                    id = 0, // assuming id is auto-generated on insert
+                    id = newId.intValue,
                     productCode = productCode.value,
                     orderType = orderTypeOptions[selectedOrderTypeIndex.intValue],
                     shortCode = shortCode.value,
                     size = size.value,
                     description = description.value,
                     unit = unitOptions[selectedUnitIndex.intValue],
-                    category = selectedCategoryIndex.intValue+1,
-                    subCategory = selectedSubCategoryIndex.intValue+1,
+                    category = selectedCategoryIndex.intValue,
+                    subCategory = selectedSubCategoryIndex.intValue,
                     type = productTypeOptions[selectedTypeIndex.intValue],
                     entryDate = entryDate.value,
                     line = productLineOptions[selectedLineIndex.intValue],
@@ -397,7 +479,7 @@ fun CreateNewProduct(
                     remarks = remarks.value,
                     remarks2 = remarks2.value,
                     standardCost = standardCost.intValue,
-                    discontinued = discontinued.value,
+                    discontinued = discontinued.intValue,
                     reorderLevel = reorderLevel.intValue,
                     image = "",
                     quantity = 0.0
@@ -414,3 +496,6 @@ fun CreateNewProduct(
     }
 }
 
+// recup les fields des tables par queries et non hardcoded. TODO
+// recup les images des produits
+// load les images depuis la tablette

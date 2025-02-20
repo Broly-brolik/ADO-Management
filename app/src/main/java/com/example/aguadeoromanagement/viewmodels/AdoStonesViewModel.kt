@@ -26,7 +26,6 @@ class AdoStonesViewModel : ViewModel() {
         val success2 = query2.execute(Constants.url)
 
         if (success2) { // et ici
-            Log.d("zzz", "ici")
             val imageData = query2.res.firstOrNull()?.get("Picture.FileData") ?: ""
             if (imageData.isNotEmpty()) {
                 Log.d("AdoStonesViewModel", "Image data found for product $productID")
@@ -75,7 +74,6 @@ class AdoStonesViewModel : ViewModel() {
     }
 
     fun createNewProduct(product: Product) {
-
         val query = Query(
             "insert into Products (ID, ProductCode, OrderType, ShortCode, Size, Description, Unit, Category, Subcategory, Type, EntryDate, Line, Color_ADO, List_Price, Remarks, Remarks2, Standard_Cost, Discontinued, ReorderLevel) values (" +
                     "${product.id}, " +
@@ -104,4 +102,50 @@ class AdoStonesViewModel : ViewModel() {
             _error.value = "Failed to create product."
         }
     }
+
+    fun searchProductsByFilters(
+        productLine: String,
+        category: Int,
+        subCategory: Int,
+        productType: String
+    ) {
+        val queryStr = "select * from Products where " +
+                "Line = '$productLine' and " +
+                "Category = $category and " +
+                "Subcategory = $subCategory and " +
+                "Type = '$productType'"
+        val query = Query(queryStr)
+        val success = query.execute(Constants.url)
+
+        if (success) {
+            val res = mutableListOf<Product>()
+            query.res.forEach { map ->
+                val product = Product(
+                    id = map["ID"]?.toIntOrNull() ?: 0,
+                    productCode = map["ProductCode"] ?: "",
+                    description = map["Description"] ?: "",
+                    unit = map["Unit"] ?: "",
+                    category = map["Category"]?.toIntOrNull() ?: 0,
+                    subCategory = map["Subcategory"]?.toIntOrNull() ?: 0,
+                    type = map["Type"] ?: "",
+                    entryDate = map["EntryDate"] ?: "",
+                    line = map["Line"] ?: "",
+                    colorAdo = map["Color_ADO"] ?: "",
+                    image = map["Picture"] ?: ""
+                )
+                // Optionally update quantity by launching a coroutine similar to searchProductById.
+                viewModelScope.launch {
+                    val stockQuantities = getProductStockQuantity(product.id.toString())
+                    val totalQuantity = (stockQuantities[1] ?: 0.0) - (stockQuantities[2] ?: 0.0)
+                    res.add(product.copy(quantity = totalQuantity))
+                    _products.value = res
+                }
+            }
+        } else {
+            _error.value = "Failed to fetch products by filters."
+        }
+    }
 }
+
+
+
